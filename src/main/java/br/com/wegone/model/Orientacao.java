@@ -5,23 +5,40 @@ import java.util.Map;
 
 public class Orientacao {
     
-    private int id;
-    private Map <Idioma, String> titulos;
+    private String codigo;
     private TipoOrientacao tipo;
-    private Map <Idioma, String> conteudos;
+    private Map<Idioma, String> titulos = new HashMap<>();
+    private Map<TipoOrientacao, String> conteudos = new HashMap<>();
 
-    public Orientacao(int id, TipoOrientacao tipo) {
+    public Orientacao(String codigo, TipoOrientacao tipo) {
 
-        this.id = id;
+        this.codigo = codigo;
         this.tipo = tipo;
-        this.titulos = new HashMap<>();
-        this.conteudos = new HashMap<>();
 
     }
 
-    // Setters e Getters
+    public void adicionarTitulo(Idioma idioma, String titulo) {
+        titulos.put(idioma, titulo);
+    }
 
-    public 
+    public void adicionarConteudo(Idioma idioma, String conteudo) {
+        conteudos.put(idioma, conteudo);
+    }
 
+    public String getTitulo(Idioma idioma) {
+        return titulos.getOrDefault(idioma, "[no title]");
+    }
+
+    public String getConteudo(Idioma idioma) {
+        return conteudos.getOrDefault(idioma, "[no]");
+    }
+
+    public TipoOrientacao getTipo() {
+        return tipo;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
 
 }
