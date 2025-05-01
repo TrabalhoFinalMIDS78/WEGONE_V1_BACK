@@ -12,7 +12,13 @@ public class IdiomasDisponiveis {
 
     // Idiomas suportados no sistema
 
-    public void idiomasDisponiveis() {
+    public IdiomasDisponiveis() {
+
+        carregarIdiomas();
+
+    }
+
+    public void carregarIdiomas() {
 
         ListaIdiomas.add(new Idioma().construtor("pt", "Português"));
         ListaIdiomas.add(new Idioma().construtor("en", "Inglês"));

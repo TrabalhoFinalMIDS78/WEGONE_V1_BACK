@@ -27,35 +27,83 @@ public class SistemaOrientacoes {
         escolherIdiomaInicial();
 
         // Adicionando o CRUD
-        // menuPrincipal();
+        menuPrincipal();
 
     }
 
-    private static void exibirLogo() {
+    // Métodos Auxiliares
 
-        System.out.println("==========================================");
-        System.out.println("|                                        |");
-        System.out.println("|        ██     ██ ███████  ██████       |");
-        System.out.println("|        ██     ██ ██      ██            |");
-        System.out.println("|        ██  █  ██ █████   ██            |");
-        System.out.println("|        ██ ███ ██ ██      ██    ██      |");
-        System.out.println("|         ███ ███  ███████  ██████       |");
-        System.out.println("|                                        |");
-        System.out.println("|   Sistema de Orientações Multilíngue   |");
-        System.out.println("|        Versão Inicial - WEG DS         |");
-        System.out.println("==========================================\n");
+    private static void exibirLogo() {
+        System.out.println("\n╔══════════════════════════════════════════════════╗");
+        System.out.println("║                                                  ║");
+        System.out.println("║            ██     ██ ███████  ██████             ║");
+        System.out.println("║            ██     ██ ██      ██                  ║");
+        System.out.println("║            ██  █  ██ █████   ██                  ║");
+        System.out.println("║            ██ ███ ██ ██      ██    ██            ║");
+        System.out.println("║             ███ ███  ███████  ██████             ║");
+        System.out.println("║                                                  ║");
+        System.out.println("║   Sistema de Orientações Multilíngue - WEGONE    ║");
+        System.out.println("║   Versão Inicial - Desenvolvido por MIDS78       ║");
+        System.out.println("╚══════════════════════════════════════════════════╝\n");
 
         try {
-            Thread.sleep(1500); // Pausa por 1,5 segundos
+            Thread.sleep(2000); // Pausa por 2 segundos
         } catch (InterruptedException e) {
-            System.out.println("Erro ao pausar execução.");
+            System.out.println("❌ Erro ao pausar execução.");
         }
+
+    }
+
+    private static Orientacao buscarPorCodigo(String codigo) {
+        return listaOrientacoes.stream()
+            .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
+            .findFirst()
+            .orElse(null);
+    }
+
+    private static String repeatChar(char c, int count) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    private static void exibirTitulo(String titulo) {
+        
+        int largura = 50;
+        String borda = repeatChar('═', largura);
+        String linhaCentral = String.format("║%-50s║", "  " + titulo);
+
+        System.out.println("\n╔" + borda + "╗");
+        System.out.println(linhaCentral);
+        System.out.println("╚" + borda + "╝\n");
+        
+    }
+
+    private static void pausarExecucao() {
+        System.out.print("\nPressione Enter para continuar...");
+        sc.nextLine();
+    }
+
+    private static void exibirMenu() {
+
+        System.out.println("\n╔══════════════════════════════════════════════════╗");
+        System.out.println("║                 MENU ORIENTAÇÕES                 ║");
+        System.out.println("╠══════════════════════════════════════════════════╣");
+        System.out.println("║ 1 - Cadastrar nova Orientação                    ║");
+        System.out.println("║ 2 - Editar uma Orientação                        ║");
+        System.out.println("║ 3 - Excluir uma Orientação                       ║");
+        System.out.println("║ 4 - Pesquisar uma Orientação                     ║");
+        System.out.println("║ 5 - Listar as Orientações Existentes             ║");
+        System.out.println("║ 6 - Sair                                         ║");
+        System.out.println("╚══════════════════════════════════════════════════╝\n");
 
     }
 
     private static void escolherIdiomaInicial() {
 
-        System.out.print("\nEscolha o Idioma Inicial:");
+        System.out.print("\nEscolha o Idioma Inicial:\n");
         List<Idioma> idiomas = idiomasDisponiveis.getListaIdiomas();
 
         for (int i = 0; i < idiomas.size(); i++) {
@@ -72,7 +120,7 @@ public class SistemaOrientacoes {
 
         } else {
 
-            System.out.println("Erro! Usuário deve adicionar um valor correto para a escolha dos Idiomas.");
+            System.out.println("❌ Erro! Usuário deve adicionar um valor correto para a escolha dos Idiomas.");
             System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Continuar em Português");
 
             int escolhaErroIdioma = sc.nextInt();
@@ -89,7 +137,7 @@ public class SistemaOrientacoes {
 
             } else {
 
-                System.out.println("Erro! Adicione uma opção válida!");
+                System.out.println("❌ Erro! Adicione uma opção válida!");
 
             }
 
@@ -103,96 +151,87 @@ public class SistemaOrientacoes {
 
         while (true) {
             
-            System.out.println("========= MENU ORIENTAÇÕES =========");
-            System.out.println("\n1- Cadastrar nova Orientação");
-            System.out.println("2- Editar uma Orientação");
-            System.out.println("3- Excluir uma Orientação");
-            System.out.println("4- Pesquisar uma Orientação");
-            System.out.println("5- Listar as Orientações Existentes");
-            System.out.println("6- Sair");
-            System.out.println("\nEscolha: ");
+            try {
 
-            String escolhaMenu = sc.nextLine();
-
-            switch (escolhaMenu) {
-                case "1":
-                    
-                    //cadastrarOrientacao();
-
-                    break;
+                sc.nextLine(); // Limpa o buffer do scanner
                 
+                exibirMenu();
 
+                String escolhaMenu = sc.nextLine().trim();
 
-                case "2":
+                switch (escolhaMenu) {
+                    case "1":
                     
-                    //editarOrientacao();
+                        exibirTitulo("Cadastrar Nova Orientação");
+                        cadastrarOrientacao();
 
-                    break;
-
-
-
-                case "3":
+                        break;
+                 
+                    case "2":
                     
-                    //excluirOrientacao();
+                        exibirTitulo("Editar Orientação");
+                        editarOrientacao();
 
-                    break;
+                        break;
+
+                    case "3":
+                    
+                        exibirTitulo("Excluir Orientação");
+                        excluirOrientacao();
+
+                        break;
                 
+                    case "4":
 
+                        exibirTitulo("Pesquisar Orientação");
+                        pesquisarOrientacao();
 
-                case "4":
+                        break;
+
+                    case "5":
                     
-                    //pesquisarOrientacao();
+                        exibirTitulo("Listar Orientações Existentes");
+                        listarOrientacoes();
 
-                    break;
-
-
-
-                case "5":
-                    
-                    //listarOrientacoes();
-
-                    break;
+                        break;
                 
-
-
-
-                case "6":
+                    case "6":
                     
-                    System.out.println("\nEncerrando Sistema....");
+                        exibirTitulo("Sair do Sistema");
+                        System.out.println("\nEncerrando Sistema...."); 
 
-                    return;
-            
+                        return;
 
+                    default:
 
-                default:
+                        System.out.println("⚠️ Erro! Insira uma Opção válida do Menu!");
 
-                    System.out.println("Erro! Insira uma Opção válida do Menu!");
+                        continue;
+                }
 
-                    continue;
+            } catch (Exception e) {
+                
+                System.out.println("❌ Erro! Ocorreu um erro inesperado " + e.getMessage() + "\nPor favor, tente novamente.");
+                sc.nextLine(); // Limpa o buffer do scanner
+
+            } finally {
+
+                pausarExecucao();
+
             }
-
-
 
         }
 
-        
-    }
-
-    // Métodos Afins
-
-    private static Orientacao buscarPorCodigo(String codigo) {
-        return listaOrientacoes.stream()
-            .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
-            .findFirst()
-            .orElse(null);
     }
 
     // Métodos CRUD
 
+    // Método para o Cadastro de Orientações
+
     private static void cadastrarOrientacao() {
 
         System.out.print("Código da nova orientação: ");
-        String codigo = sc.nextLine();
+        String codigoCadastrar = sc.nextLine();
 
         // Selecionar tipo
         System.out.println("Escolha o tipo:");
@@ -214,13 +253,13 @@ public class SistemaOrientacoes {
 
         if (tipoSelecionado == null) {
 
-            System.out.println("Erro! Tipo de orientação não encontrado.");
+            System.out.println("❌ Erro! Tipo de orientação não encontrado.");
 
             return;
 
         }
 
-        Orientacao novaOrientacao = new Orientacao(codigoTipoEscolhido, tipoSelecionado);
+        Orientacao novaOrientacao = new Orientacao(codigoCadastrar, tipoSelecionado);
 
         // Adicionando títulos e conteúdos para cada idioma
         for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
@@ -234,7 +273,7 @@ public class SistemaOrientacoes {
 
         listaOrientacoes.add(novaOrientacao);
         
-        System.out.println("Sucesso! Orientação cadastrada com sucesso!");
+        System.out.println("✅ Sucesso! Orientação cadastrada com sucesso!");
         
     }
 
@@ -249,7 +288,7 @@ public class SistemaOrientacoes {
 
         if (orientacaoEdicao == null) {
 
-            System.out.println("Orientação não encontrada.");
+            System.out.println("❌ Erro! Tipo de orientação não encontrado.");
 
             return;
 
@@ -257,19 +296,20 @@ public class SistemaOrientacoes {
 
         for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
 
-            System.out.print("Novo título | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
+            System.out.print("\nNovo título | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
             String novoTitulo = sc.nextLine();
 
             if (!novoTitulo.isEmpty()) orientacaoEdicao.adicionarTitulo(idioma, novoTitulo); // Adiciona o novo título
 
-            System.out.print("Novo conteúdo | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
+            System.out.print("\nNovo conteúdo | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
             String novoConteudo = sc.nextLine();
 
             if (!novoConteudo.isEmpty()) orientacaoEdicao.adicionarConteudo(idioma, novoConteudo); // Adiciona o novo conteúdo
 
         }
 
-        System.out.println("Sucesso! Orientação atualizada.");
+        System.out.println("✅ Sucesso! Orientação atualizada.");
+
     }
 
     // Método para a Exlusão de Orientações
@@ -284,11 +324,11 @@ public class SistemaOrientacoes {
         if (orientacaoExclusao != null) {
 
             listaOrientacoes.remove(orientacaoExclusao);
-            System.out.println("Sucesso! Orientação removida com sucesso.");
+            System.out.println("✅ Sucesso! Orientação removida com sucesso.");
 
         } else {
 
-            System.out.println("Erro! Orientação não encontrada.");
+            System.out.println("❌ Erro! Orientação não encontrada.");
 
         }
 
@@ -300,6 +340,8 @@ public class SistemaOrientacoes {
 
         System.out.print("\nDigite o titulo da Orientação para buscar (Uma parte já é Suficiente): ");
         String pesquisa = sc.nextLine().toLowerCase();
+
+        boolean encontrou = false;
 
         System.out.println("\nResultados da busca:");
 
@@ -313,20 +355,32 @@ public class SistemaOrientacoes {
 
                     System.out.println("- [" + idioma.getNome() + "] " + titulo + " (" + orientacaoPesquisa.getCodigo() + ")");
 
+                    encontrou = true;
+
                 }
             }
         }
+
+        if (!encontrou) {
+
+            System.out.println("Nenhum resultado encontrado para a pesquisa: " + pesquisa);
+        }
+
     }
+
+    // Método para listar todas as Orientações cadastradas
 
     private static void listarOrientacoes() {
 
         if (listaOrientacoes.isEmpty()) {
 
-            System.out.println("Erro! Nenhuma orientação cadastrada.");
+            System.out.println("⚠️ Erro! Nenhuma orientação cadastrada.");
 
             return;
 
         }
+
+        System.out.println("\nTodas as orientações cadastradas:");
 
         for (Orientacao o : listaOrientacoes) {
 
@@ -337,6 +391,4 @@ public class SistemaOrientacoes {
 
         }
     }
-
-
 }
