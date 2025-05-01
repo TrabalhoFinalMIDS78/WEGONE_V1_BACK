@@ -8,7 +8,7 @@ public class Orientacao {
     private String codigo;
     private TipoOrientacao tipo;
     private Map<Idioma, String> titulos = new HashMap<>();
-    private Map<TipoOrientacao, String> conteudos = new HashMap<>();
+    private Map<Idioma, String> conteudos = new HashMap<>();
 
     public Orientacao(String codigo, TipoOrientacao tipo) {
 
