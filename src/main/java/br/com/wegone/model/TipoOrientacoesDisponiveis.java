@@ -80,7 +80,7 @@ public class TipoOrientacoesDisponiveis {
         
     }
 
-    public List<TipoOrientacao> getListaOrientacoesDisponivei() {
+    public List<TipoOrientacao> getListaOrientacoesDisponiveis() {
 
         return ListaOrientacoesDisponiveis;
 
