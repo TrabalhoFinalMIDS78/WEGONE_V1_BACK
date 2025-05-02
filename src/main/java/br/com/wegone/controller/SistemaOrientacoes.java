@@ -120,7 +120,7 @@ public class SistemaOrientacoes {
 
         } else {
 
-            System.out.println("❌ Erro! Usuário deve adicionar um valor correto para a escolha dos Idiomas.");
+            System.out.println("Erro! Usuário deve adicionar um valor correto para a escolha dos Idiomas.");
             System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Continuar em Português");
 
             int escolhaErroIdioma = sc.nextInt();
@@ -137,7 +137,7 @@ public class SistemaOrientacoes {
 
             } else {
 
-                System.out.println("❌ Erro! Adicione uma opção válida!");
+                System.out.println("Erro! Adicione uma opção válida!");
 
             }
 
@@ -204,15 +204,14 @@ public class SistemaOrientacoes {
 
                     default:
 
-                        System.out.println("⚠️ Erro! Insira uma Opção válida do Menu!");
+                        System.out.println("Erro! Insira uma Opção válida do Menu!");
 
                         continue;
                 }
 
             } catch (Exception e) {
                 
-                System.out.println("❌ Erro! Ocorreu um erro inesperado " + e.getMessage() + "\nPor favor, tente novamente.");
-                sc.nextLine(); // Limpa o buffer do scanner
+                System.out.println("Erro! Ocorreu um erro inesperado " + e.getMessage() + "\nPor favor, tente novamente.");
 
             } finally {
 
@@ -239,7 +238,7 @@ public class SistemaOrientacoes {
         
         for (int i = 0; i < tipos.size(); i++) {
 
-            System.out.println((i + 1) + "- Nome: " + tipos.get(i).getNome(idiomaAtual) + " | Código: " + tipos.get(i).getCodigo());
+            System.out.printf("%d- Nome: %-35s | Código: %s\n", i + 1, tipos.get(i).getNome(idiomaAtual), tipos.get(i).getCodigo());
 
         }
 
@@ -253,7 +252,7 @@ public class SistemaOrientacoes {
 
         if (tipoSelecionado == null) {
 
-            System.out.println("❌ Erro! Tipo de orientação não encontrado.");
+            System.out.println("\nErro! Tipo de orientação não encontrado.");
 
             return;
 
@@ -264,7 +263,7 @@ public class SistemaOrientacoes {
         // Adicionando títulos e conteúdos para cada idioma
         for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
 
-            System.out.print("Título em " + idioma.getNome() + ": ");
+            System.out.print("\nTítulo em " + idioma.getNome() + ": ");
             novaOrientacao.adicionarTitulo(idioma, sc.nextLine());
 
             System.out.print("Conteúdo em " + idioma.getNome() + ": ");
@@ -273,7 +272,7 @@ public class SistemaOrientacoes {
 
         listaOrientacoes.add(novaOrientacao);
         
-        System.out.println("✅ Sucesso! Orientação cadastrada com sucesso!");
+        System.out.println("\nSucesso! Orientação cadastrada com sucesso!");
         
     }
 
@@ -288,7 +287,7 @@ public class SistemaOrientacoes {
 
         if (orientacaoEdicao == null) {
 
-            System.out.println("❌ Erro! Tipo de orientação não encontrado.");
+            System.out.println("\nErro! Tipo de orientação não encontrado.");
 
             return;
 
@@ -308,7 +307,7 @@ public class SistemaOrientacoes {
 
         }
 
-        System.out.println("✅ Sucesso! Orientação atualizada.");
+        System.out.println("\nSucesso! Orientação atualizada.");
 
     }
 
@@ -324,11 +323,11 @@ public class SistemaOrientacoes {
         if (orientacaoExclusao != null) {
 
             listaOrientacoes.remove(orientacaoExclusao);
-            System.out.println("✅ Sucesso! Orientação removida com sucesso.");
+            System.out.println("\nSucesso! Orientação removida com sucesso.");
 
         } else {
 
-            System.out.println("❌ Erro! Orientação não encontrada.");
+            System.out.println("Erro! Orientação não encontrada.");
 
         }
 
@@ -353,7 +352,7 @@ public class SistemaOrientacoes {
 
                 if (titulo.toLowerCase().contains(pesquisa)) {
 
-                    System.out.println("- [" + idioma.getNome() + "] " + titulo + " (" + orientacaoPesquisa.getCodigo() + ")");
+                    System.out.printf("- [%-10s] Código: %-8s | Titulo: %s\n", idioma.getNome(), orientacaoPesquisa.getCodigo(), titulo);
 
                     encontrou = true;
 
@@ -374,7 +373,7 @@ public class SistemaOrientacoes {
 
         if (listaOrientacoes.isEmpty()) {
 
-            System.out.println("⚠️ Erro! Nenhuma orientação cadastrada.");
+            System.out.println("Erro! Nenhuma orientação cadastrada.");
 
             return;
 
