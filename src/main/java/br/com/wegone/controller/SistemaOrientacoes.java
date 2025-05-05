@@ -47,9 +47,9 @@ public class SistemaOrientacoes {
         System.out.println("╚══════════════════════════════════════════════════╝\n");
 
         try {
-            Thread.sleep(2000); // Pausa por 2 segundos
+            Thread.sleep(1500); // Pausa por 1,5 segundos
         } catch (InterruptedException e) {
-            System.out.println("❌ Erro ao pausar execução.");
+            System.out.println("Erro ao pausar execução.");
         }
 
     }
@@ -69,6 +69,35 @@ public class SistemaOrientacoes {
         return sb.toString();
     }
 
+    private static String lerLinha() {
+
+        try {
+
+            return sc.nextLine().trim();
+
+        } catch (Exception e) {
+
+            return "";
+
+        }
+    }
+
+    private static void tratarErroIdioma() {
+
+        System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Continuar em Português");
+        String escolhaErro = lerLinha();
+
+        if ("1".equals(escolhaErro)) {
+
+            System.out.println("Encerrando Sistema...");
+            System.exit(0);
+
+        } else {
+
+            idiomaAtual = idiomasDisponiveis.buscarPorCodigo("pt");
+        }
+    }
+
     private static void exibirTitulo(String titulo) {
         
         int largura = 50;
@@ -82,8 +111,15 @@ public class SistemaOrientacoes {
     }
 
     private static void pausarExecucao() {
+
         System.out.print("\nPressione Enter para continuar...");
-        sc.nextLine();
+
+    }
+
+    private static void separador() {
+
+        System.out.println("\n" + repeatChar('═', 52));
+
     }
 
     private static void exibirMenu() {
@@ -106,45 +142,40 @@ public class SistemaOrientacoes {
         System.out.print("\nEscolha o Idioma Inicial:\n");
         List<Idioma> idiomas = idiomasDisponiveis.getListaIdiomas();
 
-        for (int i = 0; i < idiomas.size(); i++) {
+        System.out.println("\n╔══════════════════════════════════════════════════╗");
+        System.out.println("║                  ESCOLHA IDIOMA                  ║");
+        System.out.println("╠══════════════════════════════════════════════════╣");
+        System.out.println("║ 1 - Português                                    ║");
+        System.out.println("║ 2 - Inglês                                       ║");
+        System.out.println("║ 3 - Espanhol                                     ║");
+        System.out.println("║ 4 - Alemão                                       ║");
+        System.out.println("║ 5 - Mandarim                                     ║");
+        System.out.println("╚══════════════════════════════════════════════════╝\n");
 
-            System.out.println((i + 1) + "- " + idiomas.get(i).getNome()); // Mostrar os nomes dos Idiomas Disponiveis
+        String entradaIdioma = lerLinha();
 
-        }
+        try {
+            int escolhaIdioma = Integer.parseInt(entradaIdioma);
 
-        int escolhaIdioma = sc.nextInt();
+            if (escolhaIdioma >= 1 && escolhaIdioma <= idiomas.size()) {
 
-        if (escolhaIdioma >= 1 && escolhaIdioma <= 5) {
-
-            idiomaAtual = idiomas.get(escolhaIdioma - 1); // Linkei entre a Lista de Idiomas que fiz para definir o Idioma do Sistema
-
-        } else {
-
-            System.out.println("Erro! Usuário deve adicionar um valor correto para a escolha dos Idiomas.");
-            System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Continuar em Português");
-
-            int escolhaErroIdioma = sc.nextInt();
-
-            if (escolhaErroIdioma == 1) {
-
-                System.out.println("\nEncerrando Sistema....");
-
-                return;
-
-            } else if (escolhaErroIdioma == 2) {
-
-                idiomaAtual = idiomasDisponiveis.buscarPorCodigo("pt");
+                idiomaAtual = idiomas.get(escolhaIdioma - 1);
 
             } else {
 
-                System.out.println("Erro! Adicione uma opção válida!");
+                tratarErroIdioma();
 
             }
 
+        } catch (NumberFormatException e) {
+
+            tratarErroIdioma();
+            
         }
 
-        System.out.println("\nIdioma selecionado " + idiomaAtual.getNome());
-
+        System.out.println("\nIdioma selecionado: " + idiomaAtual.getNome());
+        separador();
+        
     }
 
     private static void menuPrincipal() {
