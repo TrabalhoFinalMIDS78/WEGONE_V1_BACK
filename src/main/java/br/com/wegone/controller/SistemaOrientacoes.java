@@ -14,7 +14,8 @@ public class SistemaOrientacoes {
 
     private static List<Orientacao> listaOrientacoes = new ArrayList<>();
     private static IdiomasDisponiveis idiomasDisponiveis = new IdiomasDisponiveis();
-    private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(idiomasDisponiveis);
+    private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(
+            idiomasDisponiveis);
     private static Scanner sc = new Scanner(System.in);
     private static Idioma idiomaAtual;
 
@@ -56,9 +57,9 @@ public class SistemaOrientacoes {
 
     private static Orientacao buscarPorCodigo(String codigo) {
         return listaOrientacoes.stream()
-            .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
-            .findFirst()
-            .orElse(null);
+                .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
+                .findFirst()
+                .orElse(null);
     }
 
     private static String repeatChar(char c, int count) {
@@ -82,9 +83,14 @@ public class SistemaOrientacoes {
         }
     }
 
+    // Tratamento de Excessões
+
+    // Métodos para tratamento de erros de entrada do usuário
+
+    // Método para tratamento de erro de idioma (escolha do idioma inicial)
     private static void tratarErroIdioma() {
 
-        System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Continuar em Português");
+        System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Tentar Novamente");
         String escolhaErro = lerLinha();
 
         if ("1".equals(escolhaErro)) {
@@ -94,12 +100,56 @@ public class SistemaOrientacoes {
 
         } else {
 
-            idiomaAtual = idiomasDisponiveis.buscarPorCodigo("pt");
+            escolherIdiomaInicial(); // Chama o método novamente para escolher o idioma
+
         }
     }
 
+    // Método para tratamento de erro de menu (escolha do menu)
+    private static void tratarErroMenu() {
+
+        System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Tentar Novamente");
+        String escolhaErro = lerLinha();
+
+        if ("1".equals(escolhaErro)) {
+
+            System.out.println("Encerrando Sistema...");
+            System.exit(0);
+
+        } else {
+
+            menuPrincipal(); // Chama o método novamente para escolher o idioma
+        }
+    }
+
+    // Método para tratamento de erro de Cadastro de Orientações (escolha do menu de Cadastro de Orientações)
+
+    private static void tratarErroCadastro() {
+
+        System.out.println("Escolha:\n1- Fechar Sistema\n2- Tentar Novamente\n3- Voltar ao Menu Principal");
+        String escolhaErro = lerLinha();
+
+        if ("1".equals(escolhaErro)) {
+
+            System.out.println("Encerrando Sistema...");
+            System.exit(0);
+
+        } else if ("1".equals(escolhaErro)) {
+
+            cadastrarOrientacao(); // Chama o método novamente para cadastrar uma nova orientação
+            
+        } else {
+
+            menuPrincipal(); // Chama o método novamente para escolher o idioma
+
+        }
+
+    }
+
+    // Métodos para exibir mensagens e separadores (auxiliares para a visualização do Usuário no Terminal)
+
     private static void exibirTitulo(String titulo) {
-        
+
         int largura = 50;
         String borda = repeatChar('═', largura);
         String linhaCentral = String.format("║%-50s║", "  " + titulo);
@@ -107,7 +157,7 @@ public class SistemaOrientacoes {
         System.out.println("\n╔" + borda + "╗");
         System.out.println(linhaCentral);
         System.out.println("╚" + borda + "╝\n");
-        
+
     }
 
     private static void pausarExecucao() {
@@ -137,10 +187,7 @@ public class SistemaOrientacoes {
 
     }
 
-    private static void escolherIdiomaInicial() {
-
-        System.out.print("\nEscolha o Idioma Inicial:\n");
-        List<Idioma> idiomas = idiomasDisponiveis.getListaIdiomas();
+    public static void exibirIdiomas() {
 
         System.out.println("\n╔══════════════════════════════════════════════════╗");
         System.out.println("║                  ESCOLHA IDIOMA                  ║");
@@ -151,6 +198,15 @@ public class SistemaOrientacoes {
         System.out.println("║ 4 - Alemão                                       ║");
         System.out.println("║ 5 - Mandarim                                     ║");
         System.out.println("╚══════════════════════════════════════════════════╝\n");
+
+    }
+
+    private static void escolherIdiomaInicial() {
+
+        System.out.print("\nEscolha o Idioma Inicial:\n");
+        List<Idioma> idiomas = idiomasDisponiveis.getListaIdiomas();
+
+        exibirIdiomas(); // Mostra os idiomas do sistema
 
         String entradaIdioma = lerLinha();
 
@@ -170,66 +226,72 @@ public class SistemaOrientacoes {
         } catch (NumberFormatException e) {
 
             tratarErroIdioma();
-            
+
         }
 
         System.out.println("\nIdioma selecionado: " + idiomaAtual.getNome());
         separador();
-        
+
     }
 
     private static void menuPrincipal() {
 
         while (true) {
-            
+
+            exibirMenu();
+
+            String entradaMenu = sc.nextLine().trim();
+
             try {
 
-                sc.nextLine(); // Limpa o buffer do scanner
-                
-                exibirMenu();
+                int escolhaMenu = Integer.parseInt(entradaMenu);
 
-                String escolhaMenu = sc.nextLine().trim();
+                if (escolhaMenu < 1 || escolhaMenu > 6) {
 
-                switch (escolhaMenu) {
-                    case "1":
-                    
+                    tratarErroMenu();
+
+                } else {
+
+                    switch (escolhaMenu) {
+                    case 1:
+
                         exibirTitulo("Cadastrar Nova Orientação");
                         cadastrarOrientacao();
 
                         break;
-                 
-                    case "2":
-                    
+
+                    case 2:
+
                         exibirTitulo("Editar Orientação");
                         editarOrientacao();
 
                         break;
 
-                    case "3":
-                    
+                    case 3:
+
                         exibirTitulo("Excluir Orientação");
                         excluirOrientacao();
 
                         break;
-                
-                    case "4":
+
+                    case 4:
 
                         exibirTitulo("Pesquisar Orientação");
                         pesquisarOrientacao();
 
                         break;
 
-                    case "5":
-                    
+                    case 5:
+
                         exibirTitulo("Listar Orientações Existentes");
                         listarOrientacoes();
 
                         break;
-                
-                    case "6":
-                    
+
+                    case 6:
+
                         exibirTitulo("Sair do Sistema");
-                        System.out.println("\nEncerrando Sistema...."); 
+                        System.out.println("\nEncerrando Sistema....");
 
                         return;
 
@@ -238,15 +300,18 @@ public class SistemaOrientacoes {
                         System.out.println("Erro! Insira uma Opção válida do Menu!");
 
                         continue;
+
+                    }
+
                 }
 
-            } catch (Exception e) {
-                
-                System.out.println("Erro! Ocorreu um erro inesperado " + e.getMessage() + "\nPor favor, tente novamente.");
+            } catch (NumberFormatException e) {
+
+                tratarErroMenu();
 
             } finally {
 
-                pausarExecucao();
+                separador();
 
             }
 
@@ -261,15 +326,34 @@ public class SistemaOrientacoes {
     private static void cadastrarOrientacao() {
 
         System.out.print("Código da nova orientação: ");
-        String codigoCadastrar = sc.nextLine();
+        String codigoCadastrar = lerLinha();
+
+        try {
+
+            char verificacaoDigitoInt = codigoCadastrar.charAt(0);
+
+            if (Character.isDigit(verificacaoDigitoInt)) {
+
+                System.out.println("Erro! O código não pode começar com um número.");
+
+                return;
+
+            }
+            
+        } catch (Exception e) {
+
+
+            
+        }
 
         // Selecionar tipo
         System.out.println("Escolha o tipo:");
         List<TipoOrientacao> tipos = tipoOrientacoesDisponiveis.getListaOrientacoesDisponiveis();
-        
+
         for (int i = 0; i < tipos.size(); i++) {
 
-            System.out.printf("%d- Nome: %-35s | Código: %s\n", i + 1, tipos.get(i).getNome(idiomaAtual), tipos.get(i).getCodigo());
+            System.out.printf("%d- Nome: %-35s | Código: %s\n", i + 1, tipos.get(i).getNome(idiomaAtual),
+                    tipos.get(i).getCodigo());
 
         }
 
@@ -302,9 +386,9 @@ public class SistemaOrientacoes {
         }
 
         listaOrientacoes.add(novaOrientacao);
-        
+
         System.out.println("\nSucesso! Orientação cadastrada com sucesso!");
-        
+
     }
 
     // Método para a Edição de Orientações
@@ -329,12 +413,14 @@ public class SistemaOrientacoes {
             System.out.print("\nNovo título | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
             String novoTitulo = sc.nextLine();
 
-            if (!novoTitulo.isEmpty()) orientacaoEdicao.adicionarTitulo(idioma, novoTitulo); // Adiciona o novo título
+            if (!novoTitulo.isEmpty())
+                orientacaoEdicao.adicionarTitulo(idioma, novoTitulo); // Adiciona o novo título
 
             System.out.print("\nNovo conteúdo | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
             String novoConteudo = sc.nextLine();
 
-            if (!novoConteudo.isEmpty()) orientacaoEdicao.adicionarConteudo(idioma, novoConteudo); // Adiciona o novo conteúdo
+            if (!novoConteudo.isEmpty())
+                orientacaoEdicao.adicionarConteudo(idioma, novoConteudo); // Adiciona o novo conteúdo
 
         }
 
@@ -383,7 +469,8 @@ public class SistemaOrientacoes {
 
                 if (titulo.toLowerCase().contains(pesquisa)) {
 
-                    System.out.printf("- [%-10s] Código: %-8s | Titulo: %s\n", idioma.getNome(), orientacaoPesquisa.getCodigo(), titulo);
+                    System.out.printf("- [%-10s] Código: %-8s | Titulo: %s\n", idioma.getNome(),
+                            orientacaoPesquisa.getCodigo(), titulo);
 
                     encontrou = true;
 
