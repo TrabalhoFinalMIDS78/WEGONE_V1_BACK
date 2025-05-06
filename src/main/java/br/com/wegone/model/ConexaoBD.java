@@ -48,7 +48,7 @@ public class ConexaoBD {
             stmt.close();
             conexao.close();
         } catch (SQLException e) {
-            System.out.println("Erro ao conectar ao banco de dados:");
+            System.out.println("Erro ao conectar ao banco de dados!");
             e.printStackTrace();
         }
     }
