@@ -21,12 +21,12 @@ public class ConexaoBD {
         System.out.print("Digite o telefone: ");
         String telefone = scanner.nextLine();
 
-        System.out.print("Digite a data de nascimento (yyyy-mm-dd): ");
+        System.out.print("Digite a data de nascimento (yyyy/mm/dd): ");
         String dataNascimento = scanner.nextLine();
 
-        String url = "jdbc:mysql://localhost:3306/wegone";
+        String url = "jdbc:mysql://yamabiko.proxy.rlwy.net:25284/railway";
         String usuario = "root"; 
-        String senha = "";     // Alterar dependeno da senha  
+        String senha = "bYUafjZKoGvIjsdEvkTKwRVIWDeePBPG";     // Alterar dependeno da senha  
 
         try {
             Connection conexao = DriverManager.getConnection(url, usuario, senha);
@@ -54,8 +54,6 @@ public class ConexaoBD {
     }
     }
 }
-
-
 
 
 
