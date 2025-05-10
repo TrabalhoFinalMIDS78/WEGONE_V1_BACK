@@ -24,9 +24,9 @@ public class ConexaoBD {
         System.out.print("Digite a data de nascimento (yyyy/mm/dd): ");
         String dataNascimento = scanner.nextLine();
 
-        String url = "jdbc:mysql://yamabiko.proxy.rlwy.net:25284/railway";
+        String url = "jdbc:mysql://caboose.proxy.rlwy.net:41283/railway"; //
         String usuario = "root"; 
-        String senha = "bYUafjZKoGvIjsdEvkTKwRVIWDeePBPG";     // Alterar dependeno da senha  
+        String senha = "cnTSUGezfuakMIEFDQLxosqYXfQmGZEW";     // Alterar dependeno da senha  
 
         try {
             Connection conexao = DriverManager.getConnection(url, usuario, senha);
@@ -37,7 +37,7 @@ public class ConexaoBD {
             // Parâmetros para a consulta no SQL
             stmt.setString(1, nome);         
             stmt.setString(2, email);        
-            stmt.setString(3, telefone);     
+            stmt.setString(3, telefone);    
             stmt.setString(4, dataNascimento);
 
             int linhasAfetadas = stmt.executeUpdate();
