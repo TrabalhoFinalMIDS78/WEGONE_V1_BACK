@@ -3,6 +3,8 @@ package br.com.wegone.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.ValidationException;
+
 public class Orientacao {
     
     private String codigo;
@@ -18,11 +20,15 @@ public class Orientacao {
     }
 
     public void adicionarTitulo(Idioma idioma, String titulo) {
+
         titulos.put(idioma, titulo);
+
     }
 
     public void adicionarConteudo(Idioma idioma, String conteudo) {
+
         conteudos.put(idioma, conteudo);
+
     }
 
     public String getTitulo(Idioma idioma) {
@@ -30,7 +36,7 @@ public class Orientacao {
     }
 
     public String getConteudo(Idioma idioma) {
-        return conteudos.getOrDefault(idioma, "[no]");
+        return conteudos.getOrDefault(idioma, "[no content]");
     }
 
     public TipoOrientacao getTipo() {

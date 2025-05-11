@@ -413,16 +413,20 @@ public class SistemaOrientacoes {
             System.out.print("\nNovo título | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
             String novoTitulo = sc.nextLine();
 
-            if (!novoTitulo.isEmpty())
-                orientacaoEdicao.adicionarTitulo(idioma, novoTitulo); // Adiciona o novo título
+            if (!novoTitulo.isEmpty()) {
+
+                orientacaoEdicao.adicionarTitulo(idioma, novoTitulo);
+
+            }
+               
 
             System.out.print("\nNovo conteúdo | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
             String novoConteudo = sc.nextLine();
 
             if (!novoConteudo.isEmpty())
-                orientacaoEdicao.adicionarConteudo(idioma, novoConteudo); // Adiciona o novo conteúdo
+                orientacaoEdicao.adicionarConteudo(idioma, novoConteudo);
 
-        }
+            }
 
         System.out.println("\nSucesso! Orientação atualizada.");
 
