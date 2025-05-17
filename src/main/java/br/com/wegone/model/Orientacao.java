@@ -18,11 +18,15 @@ public class Orientacao {
     }
 
     public void adicionarTitulo(Idioma idioma, String titulo) {
+
         titulos.put(idioma, titulo);
+
     }
 
     public void adicionarConteudo(Idioma idioma, String conteudo) {
+
         conteudos.put(idioma, conteudo);
+
     }
 
     public String getTitulo(Idioma idioma) {
@@ -30,7 +34,7 @@ public class Orientacao {
     }
 
     public String getConteudo(Idioma idioma) {
-        return conteudos.getOrDefault(idioma, "[no]");
+        return conteudos.getOrDefault(idioma, "[no content]");
     }
 
     public TipoOrientacao getTipo() {

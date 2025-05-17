@@ -1,4 +1,4 @@
-package br.com.wegone.view;
+package br.com.wegone;
 
 /* Main do Projeto
  * 

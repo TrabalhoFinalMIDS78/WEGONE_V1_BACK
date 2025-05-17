@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import br.com.wegone.exception.DadosIncompletosException;
 import br.com.wegone.model.Idioma;
 import br.com.wegone.model.IdiomasDisponiveis;
 import br.com.wegone.model.Orientacao;
@@ -33,32 +34,11 @@ public class SistemaOrientacoes {
 
     // Métodos Auxiliares
 
-    private static void exibirLogo() {
-        System.out.println("\n╔══════════════════════════════════════════════════╗");
-        System.out.println("║                                                  ║");
-        System.out.println("║            ██     ██ ███████  ██████             ║");
-        System.out.println("║            ██     ██ ██      ██                  ║");
-        System.out.println("║            ██  █  ██ █████   ██                  ║");
-        System.out.println("║            ██ ███ ██ ██      ██    ██            ║");
-        System.out.println("║             ███ ███  ███████  ██████             ║");
-        System.out.println("║                                                  ║");
-        System.out.println("║   Sistema de Orientações Multilíngue - WEGONE    ║");
-        System.out.println("║   Versão Inicial - Desenvolvido por MIDS78       ║");
-        System.out.println("╚══════════════════════════════════════════════════╝\n");
-
-        try {
-            Thread.sleep(1500); // Pausa por 1,5 segundos
-        } catch (InterruptedException e) {
-            System.out.println("Erro ao pausar execução.");
-        }
-
-    }
-
     private static Orientacao buscarPorCodigo(String codigo) {
         return listaOrientacoes.stream()
-            .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
-            .findFirst()
-            .orElse(null);
+                .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
+                .findFirst()
+                .orElse(null);
     }
 
     private static String repeatChar(char c, int count) {
@@ -82,9 +62,25 @@ public class SistemaOrientacoes {
         }
     }
 
+    // Tratamento de Excessões
+
+    // Métodos para tratamento de erros de entrada do usuário
+
+    // Tratamento de Erro para Inputs Vazios
+    public static void validarInputVazio(String texto) {
+
+        if (texto == null || texto.isBlank()) {
+
+            throw new DadosIncompletosException("Informação não pode estar vazia.");
+
+        }
+
+    }
+
+    // Método para tratamento de erro de idioma (escolha do idioma inicial)
     private static void tratarErroIdioma() {
 
-        System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Continuar em Português");
+        System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Tentar Novamente");
         String escolhaErro = lerLinha();
 
         if ("1".equals(escolhaErro)) {
@@ -94,12 +90,98 @@ public class SistemaOrientacoes {
 
         } else {
 
-            idiomaAtual = idiomasDisponiveis.buscarPorCodigo("pt");
+            escolherIdiomaInicial(); // Chama o método novamente para escolher o idioma
+
         }
     }
 
-    private static void exibirTitulo(String titulo) {
+    // Método para tratamento de erro de menu (escolha do menu)
+    private static void tratarErroMenu() {
+
+        System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Tentar Novamente");
+        String escolhaErro = lerLinha();
+
+        if ("1".equals(escolhaErro)) {
+
+            System.out.println("Encerrando Sistema...");
+            System.exit(0);
+
+        } else {
+
+            menuPrincipal(); // Chama o método novamente para escolher o idioma
+        }
+    }
+
+    // Método para tratamento de erro de Cadastro de Orientações (escolha do menu de
+    // Cadastro de Orientações)
+
+    private static void tratarErroCadastro() {
+
+        System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Tentar Novamente\n3- Voltar ao Menu Principal");
+        String escolhaErro = lerLinha();
+
+        if ("1".equals(escolhaErro)) {
+
+            System.out.println("Encerrando Sistema...");
+            System.exit(0);
+
+        } else if ("2".equals(escolhaErro)) {
+
+            cadastrarOrientacao(); // Chama o método novamente para cadastrar uma nova orientação
+
+        } else {
+
+            menuPrincipal(); // Chama o método novamente para escolher o idioma
+
+        }
+
+    }
+
+    private static void tratarErroEdicao() {
+
+        System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Tentar Novamente\n3- Voltar ao Menu Principal");
+        String escolhaErro = lerLinha();
+
+        if ("1".equals(escolhaErro)) {
+
+            System.out.println("Encerrando Sistema...");
+            System.exit(0);
+
+        } else if ("2".equals(escolhaErro)) {
+
+            editarOrientacao(); // Chama o método novamente para editar uma nova orientação
+
+        } else {
+
+            menuPrincipal(); // Chama o método novamente para escolher o idioma
+
+        }
+
+    }
+
+    public static void validarCodigoCadastro(String codigo) throws DadosIncompletosException {
+
+        validarInputVazio(codigo);
+
+        if (!Character.isDigit(codigo.charAt(0))) {
+
+            throw new DadosIncompletosException("Código da Orientação deve obrigatoriamente começar com um número.");
+
+        }
+
+        if (buscarPorCodigo(codigo) != null) {
+
+            throw new DadosIncompletosException("Já existe uma orientação com esse código.");
+
+        }
         
+    }
+
+    // Métodos para exibir mensagens e separadores (auxiliares para a visualização
+    // do Usuário no Terminal)
+
+    private static void exibirTitulo(String titulo) {
+
         int largura = 50;
         String borda = repeatChar('═', largura);
         String linhaCentral = String.format("║%-50s║", "  " + titulo);
@@ -107,7 +189,7 @@ public class SistemaOrientacoes {
         System.out.println("\n╔" + borda + "╗");
         System.out.println(linhaCentral);
         System.out.println("╚" + borda + "╝\n");
-        
+
     }
 
     private static void pausarExecucao() {
@@ -119,6 +201,27 @@ public class SistemaOrientacoes {
     private static void separador() {
 
         System.out.println("\n" + repeatChar('═', 52));
+
+    }
+
+    private static void exibirLogo() {
+        System.out.println("\n╔══════════════════════════════════════════════════╗");
+        System.out.println("║                                                  ║");
+        System.out.println("║            ██     ██ ███████  ██████             ║");
+        System.out.println("║            ██     ██ ██      ██                  ║");
+        System.out.println("║            ██  █  ██ █████   ██                  ║");
+        System.out.println("║            ██ ███ ██ ██      ██    ██            ║");
+        System.out.println("║             ███ ███  ███████  ██████             ║");
+        System.out.println("║                                                  ║");
+        System.out.println("║   Sistema de Orientações Multilíngue - WEGONE    ║");
+        System.out.println("║   Versão Inicial - Desenvolvido por MIDS78       ║");
+        System.out.println("╚══════════════════════════════════════════════════╝\n");
+
+        try {
+            Thread.sleep(1500); // Pausa por 1,5 segundos
+        } catch (InterruptedException e) {
+            System.out.println("Erro ao pausar execução.");
+        }
 
     }
 
@@ -137,10 +240,7 @@ public class SistemaOrientacoes {
 
     }
 
-    private static void escolherIdiomaInicial() {
-
-        System.out.print("\nEscolha o Idioma Inicial:\n");
-        List<Idioma> idiomas = idiomasDisponiveis.getListaIdiomas();
+    public static void exibirIdiomas() {
 
         System.out.println("\n╔══════════════════════════════════════════════════╗");
         System.out.println("║                  ESCOLHA IDIOMA                  ║");
@@ -151,6 +251,15 @@ public class SistemaOrientacoes {
         System.out.println("║ 4 - Alemão                                       ║");
         System.out.println("║ 5 - Mandarim                                     ║");
         System.out.println("╚══════════════════════════════════════════════════╝\n");
+
+    }
+
+    private static void escolherIdiomaInicial() {
+
+        System.out.print("\nEscolha o Idioma Inicial:\n");
+        List<Idioma> idiomas = idiomasDisponiveis.getListaIdiomas();
+
+        exibirIdiomas(); // Mostra os idiomas do sistema
 
         String entradaIdioma = lerLinha();
 
@@ -170,83 +279,94 @@ public class SistemaOrientacoes {
         } catch (NumberFormatException e) {
 
             tratarErroIdioma();
-            
+
         }
 
         System.out.println("\nIdioma selecionado: " + idiomaAtual.getNome());
         separador();
-        
+
     }
 
     private static void menuPrincipal() {
 
         while (true) {
-            
+
+            exibirMenu();
+
+            String entradaMenu = sc.nextLine().trim();
+
             try {
 
-                sc.nextLine(); // Limpa o buffer do scanner
-                
-                exibirMenu();
+                int escolhaMenu = Integer.parseInt(entradaMenu);
 
-                String escolhaMenu = sc.nextLine().trim();
+                if (escolhaMenu < 1 || escolhaMenu > 6) {
 
-                switch (escolhaMenu) {
-                    case "1":
-                    
-                        exibirTitulo("Cadastrar Nova Orientação");
-                        cadastrarOrientacao();
+                    tratarErroMenu();
 
-                        break;
-                 
-                    case "2":
-                    
-                        exibirTitulo("Editar Orientação");
-                        editarOrientacao();
+                } else {
 
-                        break;
+                    switch (escolhaMenu) {
+                        case 1:
 
-                    case "3":
-                    
-                        exibirTitulo("Excluir Orientação");
-                        excluirOrientacao();
+                            exibirTitulo("Cadastrar Nova Orientação");
+                            cadastrarOrientacao();
 
-                        break;
-                
-                    case "4":
+                            break;
 
-                        exibirTitulo("Pesquisar Orientação");
-                        pesquisarOrientacao();
+                        case 2:
 
-                        break;
+                            exibirTitulo("Editar Orientação");
+                            editarOrientacao();
 
-                    case "5":
-                    
-                        exibirTitulo("Listar Orientações Existentes");
-                        listarOrientacoes();
+                            break;
 
-                        break;
-                
-                    case "6":
-                    
-                        exibirTitulo("Sair do Sistema");
-                        System.out.println("\nEncerrando Sistema...."); 
+                        case 3:
 
-                        return;
+                            exibirTitulo("Excluir Orientação");
+                            excluirOrientacao();
 
-                    default:
+                            break;
 
-                        System.out.println("Erro! Insira uma Opção válida do Menu!");
+                        case 4:
 
-                        continue;
+                            exibirTitulo("Pesquisar Orientação");
+                            pesquisarOrientacao();
+
+                            break;
+
+                        case 5:
+
+                            exibirTitulo("Listar Orientações Existentes");
+                            listarOrientacoes();
+
+                            break;
+
+                        case 6:
+
+                            exibirTitulo("Sair do Sistema");
+                            System.out.println("\nEncerrando Sistema....");
+
+                            System.exit(0);
+
+                            break;
+
+                        default:
+
+                            System.out.println("Erro! Insira uma Opção válida do Menu!");
+
+                            continue;
+
+                    }
+
                 }
 
-            } catch (Exception e) {
-                
-                System.out.println("Erro! Ocorreu um erro inesperado " + e.getMessage() + "\nPor favor, tente novamente.");
+            } catch (NumberFormatException e) {
+
+                tratarErroMenu();
 
             } finally {
 
-                pausarExecucao();
+                separador();
 
             }
 
@@ -258,20 +378,43 @@ public class SistemaOrientacoes {
 
     // Método para o Cadastro de Orientações
 
+    // Método auxiliar para chamar as Orientações Disponíveis
+    private static void escolhaTipoOrientacao() {
+
+        List<TipoOrientacao> tipos = tipoOrientacoesDisponiveis.getListaOrientacoesDisponiveis();
+
+        for (int i = 0; i < tipos.size(); i++) {
+
+            System.out.printf("%d- Nome: %-35s | Código: %s\n", i + 1, tipos.get(i).getNome(idiomaAtual),
+                    tipos.get(i).getCodigo());
+
+        }
+
+    }
+    
     private static void cadastrarOrientacao() {
 
         System.out.print("Código da nova orientação: ");
-        String codigoCadastrar = sc.nextLine();
+        String codigoCadastrar = lerLinha();
 
-        // Selecionar tipo
-        System.out.println("Escolha o tipo:");
-        List<TipoOrientacao> tipos = tipoOrientacoesDisponiveis.getListaOrientacoesDisponiveis();
-        
-        for (int i = 0; i < tipos.size(); i++) {
+        try {
 
-            System.out.printf("%d- Nome: %-35s | Código: %s\n", i + 1, tipos.get(i).getNome(idiomaAtual), tipos.get(i).getCodigo());
+            validarCodigoCadastro(codigoCadastrar);
+
+        } catch(DadosIncompletosException e) {
+
+            System.out.println("\nErro no Cadastro! " + e.getMessage());
+
+            tratarErroCadastro();
+            return;
 
         }
+
+        // Selecionar tipo
+
+        System.out.println("\nEscolha o tipo:");
+
+        escolhaTipoOrientacao();
 
         System.out.print("\nDigite o código do tipo desejado: ");
 
@@ -282,9 +425,10 @@ public class SistemaOrientacoes {
         TipoOrientacao tipoSelecionado = tipoOrientacoesDisponiveis.buscarPorCodigo(codigoTipoEscolhido);
 
         if (tipoSelecionado == null) {
-
+            
             System.out.println("\nErro! Tipo de orientação não encontrado.");
 
+            tratarErroCadastro();
             return;
 
         }
@@ -294,17 +438,52 @@ public class SistemaOrientacoes {
         // Adicionando títulos e conteúdos para cada idioma
         for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
 
+            // Título da Orientação
             System.out.print("\nTítulo em " + idioma.getNome() + ": ");
-            novaOrientacao.adicionarTitulo(idioma, sc.nextLine());
 
+            String titulo = sc.nextLine();
+
+            try {
+
+                validarInputVazio(titulo); // Verifica se o título é vazio ou nulo.
+
+            } catch (DadosIncompletosException e) {
+
+                System.out.println("\nErro! " + e.getMessage());
+
+                tratarErroCadastro();
+                return;
+
+            }
+
+            novaOrientacao.adicionarTitulo(idioma, titulo);
+
+            // Conteúdo da Orientação
             System.out.print("Conteúdo em " + idioma.getNome() + ": ");
-            novaOrientacao.adicionarConteudo(idioma, sc.nextLine());
+
+            String conteudo = sc.nextLine();
+
+            try {
+
+                validarInputVazio(conteudo); // Verifica se o título é vazio ou nulo.
+
+            } catch (DadosIncompletosException e) {
+
+                System.out.println("\nErro! " + e.getMessage());
+
+                tratarErroCadastro();
+                return;
+
+            }
+
+            novaOrientacao.adicionarConteudo(idioma, conteudo);
+
         }
 
         listaOrientacoes.add(novaOrientacao);
-        
-        System.out.println("\nSucesso! Orientação cadastrada com sucesso!");
-        
+
+        System.out.println("\n----> Sucesso! Orientação cadastrada com sucesso! <----");
+
     }
 
     // Método para a Edição de Orientações
@@ -314,31 +493,108 @@ public class SistemaOrientacoes {
         System.out.print("\nDigite o código da orientação a ser editada: ");
         String codigoOrientacao = sc.nextLine();
 
-        Orientacao orientacaoEdicao = buscarPorCodigo(codigoOrientacao);
+        // Validação do Código da Orientação para Edição
+        try {
+            
+            validarInputVazio(codigoOrientacao); // Verifica se o código é vazio ou nulo.
 
-        if (orientacaoEdicao == null) {
+        } catch (DadosIncompletosException e) {
 
-            System.out.println("\nErro! Tipo de orientação não encontrado.");
+            System.out.println("\nErro! " + e.getMessage());
+            tratarErroEdicao();
+
+        }
+
+        Orientacao orientacaoEdicao = buscarPorCodigo(codigoOrientacao); // Busca a orientação pelo código
+
+        // Validação da existência da orientação para Edição
+        try {
+            
+            if (orientacaoEdicao == null) {
+                 throw new DadosIncompletosException("Código da orientação não encontrado.");
+            }
+
+        } catch (DadosIncompletosException e) {
+
+            System.out.println("\nErro! " + e.getMessage());
+            tratarErroEdicao();
+
+        }
+
+        // Validação da Orientação para Edição
+
+        System.out.println("\n----> Orientação encontrada <----");
+
+        exibirTitulo("Validação Orientação para Edição"); // Titulo para Validação da Orientação
+
+        System.out.println("Código: " + orientacaoEdicao.getCodigo());
+        System.out.println("Tipo: " + orientacaoEdicao.getTipo().getNome(idiomaAtual));
+        System.out.println("Título: " + orientacaoEdicao.getTitulo(idiomaAtual));
+        System.out.println("Conteúdo: " + orientacaoEdicao.getConteudo(idiomaAtual));
+
+        System.out.print("\n1- Confirmar Orientação\n2- Orientação Incorreta\nEscolha: "); // Confirmação que a Orientação está correta
+
+        String inputConfirmacaoEdicao = sc.nextLine();
+
+        // Validação do Input para escolha de Edição
+        try {
+            
+            validarInputVazio(inputConfirmacaoEdicao); // Verifica se o Input é vazio ou nulo.
+
+        } catch (DadosIncompletosException e) {
+
+            System.out.println("\nErro! " + e.getMessage());
+            tratarErroEdicao();
+
+        }
+
+        if (inputConfirmacaoEdicao.equals("1")) {
+
+            System.out.println("\n----> Orientação confirmada para edição <----\n");
+
+            for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
+
+                System.out.printf("\nIdioma Sistema: %s\n", idioma.getNome());
+                System.out.printf("%-40s: ", "Novo título (vazio para manter)");
+
+                String novoTitulo = sc.nextLine();
+
+                if (!novoTitulo.isEmpty()) {
+
+                    orientacaoEdicao.adicionarTitulo(idioma, novoTitulo);
+
+                }
+
+                System.out.printf("%-40s: ", "Novo conteúdo (vazio para manter)");
+                String novoConteudo = sc.nextLine();
+
+                if (!novoConteudo.isEmpty()) {
+
+                    orientacaoEdicao.adicionarConteudo(idioma, novoConteudo);
+
+                }
+
+            }
+
+        } else if (inputConfirmacaoEdicao.equals("2")) {
+
+            System.out.println("\n----> Orientação não confirmada para edição <----");
+
+            tratarErroEdicao();
 
             return;
 
+        } else {
+
+            System.out.println("\nErro! Opção inválida.");
+
+            tratarErroEdicao();
+
+            return;
+            
         }
 
-        for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
-
-            System.out.print("\nNovo título | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
-            String novoTitulo = sc.nextLine();
-
-            if (!novoTitulo.isEmpty()) orientacaoEdicao.adicionarTitulo(idioma, novoTitulo); // Adiciona o novo título
-
-            System.out.print("\nNovo conteúdo | Idioma Sistema [" + idioma.getNome() + "] (deixe vazio para manter): ");
-            String novoConteudo = sc.nextLine();
-
-            if (!novoConteudo.isEmpty()) orientacaoEdicao.adicionarConteudo(idioma, novoConteudo); // Adiciona o novo conteúdo
-
-        }
-
-        System.out.println("\nSucesso! Orientação atualizada.");
+        System.out.println("\n----> Sucesso! Orientação atualizada com sucesso! <----");
 
     }
 
@@ -383,7 +639,8 @@ public class SistemaOrientacoes {
 
                 if (titulo.toLowerCase().contains(pesquisa)) {
 
-                    System.out.printf("- [%-10s] Código: %-8s | Titulo: %s\n", idioma.getNome(), orientacaoPesquisa.getCodigo(), titulo);
+                    System.out.printf("- [%-10s] Código: %-8s | Titulo: %s\n", idioma.getNome(),
+                            orientacaoPesquisa.getCodigo(), titulo);
 
                     encontrou = true;
 
