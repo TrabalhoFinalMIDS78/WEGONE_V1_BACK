@@ -80,6 +80,8 @@ public class SistemaOrientacoes {
     // Método para tratamento de erro de idioma (escolha do idioma inicial)
     private static void tratarErroIdioma() {
 
+        exibirTitulo("Erro Idioma");
+
         System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Tentar Novamente");
         String escolhaErro = lerLinha();
 
@@ -97,6 +99,8 @@ public class SistemaOrientacoes {
 
     // Método para tratamento de erro de menu (escolha do menu)
     private static void tratarErroMenu() {
+
+        exibirTitulo("Erro Menu Principal");
 
         System.out.println("Erro! Valor inválido. Escolha:\n1- Fechar Sistema\n2- Tentar Novamente");
         String escolhaErro = lerLinha();
@@ -116,6 +120,8 @@ public class SistemaOrientacoes {
     // Cadastro de Orientações)
 
     private static void tratarErroCadastro() {
+
+        exibirTitulo("Erro Cadastro de Orientação");
 
         System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Tentar Novamente\n3- Voltar ao Menu Principal");
         String escolhaErro = lerLinha();
@@ -139,6 +145,8 @@ public class SistemaOrientacoes {
 
     private static void tratarErroEdicao() {
 
+        exibirTitulo("Erro Edição de Orientação");
+
         System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Tentar Novamente\n3- Voltar ao Menu Principal");
         String escolhaErro = lerLinha();
 
@@ -150,6 +158,30 @@ public class SistemaOrientacoes {
         } else if ("2".equals(escolhaErro)) {
 
             editarOrientacao(); // Chama o método novamente para editar uma nova orientação
+
+        } else {
+
+            menuPrincipal(); // Chama o método novamente para escolher o idioma
+
+        }
+
+    }
+
+    private static void tratarErroExclusao() {
+
+        exibirTitulo("Erro Exclusão de Orientação");
+
+        System.out.println("\nEscolha:\n1- Fechar Sistema\n2- Tentar Novamente\n3- Voltar ao Menu Principal");
+        String escolhaErro = lerLinha();
+
+        if ("1".equals(escolhaErro)) {
+
+            System.out.println("Encerrando Sistema...");
+            System.exit(0);
+
+        } else if ("2".equals(escolhaErro)) {
+
+            excluirOrientacao(); // Chama o método novamente para excluir uma nova orientação
 
         } else {
 
@@ -607,16 +639,84 @@ public class SistemaOrientacoes {
 
         Orientacao orientacaoExclusao = buscarPorCodigo(codigoOrientacaoExclusao);
 
-        if (orientacaoExclusao != null) {
+        try {
+
+            validarInputVazio(codigoOrientacaoExclusao);
+            
+        } catch (DadosIncompletosException e) {
+            
+            System.out.println("\nErro! " + e.getMessage());
+            tratarErroExclusao();
+            
+            return;
+
+        }
+
+        try {
+
+            if (orientacaoExclusao == null) {
+                throw new DadosIncompletosException("Código da orientação não encontrado.");
+            }
+            
+        } catch (DadosIncompletosException e) {
+            
+            System.out.println("\nErro! " + e.getMessage());
+            tratarErroExclusao();
+
+            return;
+
+        }
+
+        // Validação da Orientação para Exclusão
+
+        System.out.println("\n----> Orientação encontrada <----");
+
+        exibirTitulo("Validação Orientação para Exclusão"); // Titulo para Validação da Orientação
+
+        System.out.println("Código: " + orientacaoExclusao.getCodigo());
+        System.out.println("Tipo: " + orientacaoExclusao.getTipo().getNome(idiomaAtual));
+        System.out.println("Título: " + orientacaoExclusao.getTitulo(idiomaAtual));
+        System.out.println("Conteúdo: " + orientacaoExclusao.getConteudo(idiomaAtual));
+
+        System.out.print("\n1- Confirmar Orientação\n2- Orientação Incorreta\nEscolha: "); // Confirmação que a Orientação está correta
+
+        String inputConfirmacaoExclusao = sc.nextLine();
+
+        // Validação do Input para escolha de Exclusão
+        try {
+            
+            validarInputVazio(inputConfirmacaoExclusao); // Verifica se o Input é vazio ou nulo.
+
+        } catch (DadosIncompletosException e) {
+
+            System.out.println("\nErro! " + e.getMessage());
+            tratarErroExclusao();
+
+        }
+
+        if (inputConfirmacaoExclusao.equals("1")) {
+
+            System.out.println("\n----> Orientação confirmada para exclusão <----\n");
 
             listaOrientacoes.remove(orientacaoExclusao);
-            System.out.println("\nSucesso! Orientação removida com sucesso.");
+
+        } else if (inputConfirmacaoExclusao.equals("2")) {
+
+            System.out.println("\n----> Orientação não confirmada para exclusão <----");
+            tratarErroExclusao();
+
+            return;
 
         } else {
 
-            System.out.println("Erro! Orientação não encontrada.");
+            System.out.println("\nErro! Opção inválida.");
+            tratarErroExclusao();
+
+            return;
 
         }
+
+        System.out.println("\n----> Sucesso! Orientação removida com sucesso! <----");
 
     }
 

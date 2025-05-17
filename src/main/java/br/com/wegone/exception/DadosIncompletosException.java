@@ -2,10 +2,11 @@ package br.com.wegone.exception;
 
 public class DadosIncompletosException extends RuntimeException {
     
-    public DadosIncompletosException(String mensangem) {
+    public DadosIncompletosException(String mensagem) {
 
-        super(mensangem);
+        super(mensagem);
 
     }
 
 }
+
