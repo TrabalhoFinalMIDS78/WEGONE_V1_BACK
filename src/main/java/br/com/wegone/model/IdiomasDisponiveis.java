@@ -8,7 +8,7 @@ public class IdiomasDisponiveis {
     
     // Atributos
 
-    private List<Idioma> ListaIdiomas = new ArrayList<>();
+    private List<Idioma> listaIdiomas = new ArrayList<>();
 
     // Idiomas suportados no sistema
 
@@ -18,24 +18,33 @@ public class IdiomasDisponiveis {
 
     }
 
+    public void adicionarIdioma(Idioma idioma) {
+
+        Idioma novo = new Idioma(codigo, nome);
+        if (!idiomasDisponiveis.getListaIdiomas().contains(novo)) {
+            idiomasDisponiveis.adicionarIdioma(novo);
+        }
+
+    }
+
     public void carregarIdiomas() {
 
-        ListaIdiomas.add(new Idioma().construtor("pt", "Português"));
-        ListaIdiomas.add(new Idioma().construtor("en", "Inglês"));
-        ListaIdiomas.add(new Idioma().construtor("es", "Espanhol"));
-        ListaIdiomas.add(new Idioma().construtor("de", "Alemão"));
-        ListaIdiomas.add(new Idioma().construtor("zh", "Mandarim"));
+        listaIdiomas.add(new Idioma().construtor("pt", "Português"));
+        listaIdiomas.add(new Idioma().construtor("en", "Inglês"));
+        listaIdiomas.add(new Idioma().construtor("es", "Espanhol"));
+        listaIdiomas.add(new Idioma().construtor("de", "Alemão"));
+        listaIdiomas.add(new Idioma().construtor("zh", "Mandarim"));
 
     }
 
     public List<Idioma> getListaIdiomas() {
 
-        return ListaIdiomas;
+        return listaIdiomas;
 
     }
 
     public Idioma buscarPorCodigo(String codigo) {
-        Optional<Idioma> idioma = ListaIdiomas.stream()
+        Optional<Idioma> idioma = listaIdiomas.stream()
             .filter(i -> i.getCodigo().equals(codigo))
             .findFirst();
         return idioma.orElse(null);
