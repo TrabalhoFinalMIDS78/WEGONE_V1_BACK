@@ -630,7 +630,7 @@ public class SistemaOrientacoes {
 
     }
 
-    // Método para a Exlusão de Orientações
+    // Método para a Exclusão de Orientações
 
     private static void excluirOrientacao() {
 

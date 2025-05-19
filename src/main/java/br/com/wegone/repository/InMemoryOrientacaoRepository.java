@@ -1,3 +1,5 @@
+/*
+
 package br.com.wegone.repository;
 
 import br.com.wegone.model.Orientacao;
@@ -76,4 +78,6 @@ public class InMemoryOrientacaoRepository implements OrientacaoRepository {
         return new ArrayList<>(armazenamento);
     }
 }
+    
+*/
 

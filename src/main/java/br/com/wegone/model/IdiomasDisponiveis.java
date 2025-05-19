@@ -20,11 +20,20 @@ public class IdiomasDisponiveis {
 
     public void adicionarIdioma(Idioma idioma) {
 
-        Idioma novo = new Idioma(codigo, nome);
-        if (!idiomasDisponiveis.getListaIdiomas().contains(novo)) {
-            idiomasDisponiveis.adicionarIdioma(novo);
-        }
+        if (idioma != null && !listaIdiomas.contains(idioma)) {
 
+            listaIdiomas.add(idioma);
+
+        }
+    }
+
+    // Método auxiliar: adiciona idioma a partir de código e nome
+    public void adicionarIdioma(String codigo, String nome) {
+
+        Idioma novo = new Idioma().construtor(codigo, nome);
+
+        adicionarIdioma(novo); // Reutiliza o método acima
+        
     }
 
     public void carregarIdiomas() {
