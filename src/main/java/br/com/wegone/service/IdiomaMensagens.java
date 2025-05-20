@@ -4,6 +4,8 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import br.com.wegone.core.IdiomaSelecionado;
+
 public class IdiomaMensagens {
 
     private final ResourceBundle bundle;
@@ -13,26 +15,24 @@ public class IdiomaMensagens {
      * Tenta carregar o bundle do idioma; se falhar,
      * recai para o bundle padrão (sem sufixo).
      */
-    public IdiomaMensagens(String codigoIdioma) {
+    public IdiomaMensagens() {
+
+        String codigoAtual = IdiomaSelecionado.getIdiomaAtual();
+        String[] partesCodigo = codigoAtual.split("_"); // ["pt", "BR"]
 
         ResourceBundle tmp;
 
         try {
 
-            Locale locale = new Locale(codigoIdioma);
+            Locale locale = new Locale(partesCodigo[0], partesCodigo[1]);
+
             tmp = ResourceBundle.getBundle(BASENAME, locale);
 
-        } catch (MissingResourceException e) {
-
-            System.err.println("Aviso: não encontrei propriedades para idioma '"
-                + codigoIdioma + "', usando padrão.");
-
+        } catch (MissingResourceException | ArrayIndexOutOfBoundsException e) {
+            System.err.println("Aviso: não encontrei propriedades para idioma '" + codigoAtual + "'. Usando padrão pt_BR.");
             tmp = ResourceBundle.getBundle(BASENAME, Locale.ROOT);
-
         }
-
         this.bundle = tmp;
-
     }
 
     /**
