@@ -1,12 +1,21 @@
 package br.com.wegone.exception;
 
 public class DadosIncompletosException extends RuntimeException {
-    
-    public DadosIncompletosException(String mensagem) {
+    private final String key;
+    private final Object[] params;
 
-        super(mensagem);
+    public DadosIncompletosException(String key, Object... params) {
+        super(key);
+        this.key = key;
+        this.params = params;
+    }
 
+    public String getKey() {
+        return key;
+    }
+
+    public Object[] getParams() {
+        return params;
     }
 
 }
-

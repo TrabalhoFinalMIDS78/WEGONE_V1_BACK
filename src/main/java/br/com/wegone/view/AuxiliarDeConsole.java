@@ -1,6 +1,10 @@
 package br.com.wegone.view;
 
+import java.util.logging.Logger;
+
 public class AuxiliarDeConsole {
+
+    private static final Logger LOGGER = Logger.getLogger(AuxiliarDeConsole.class.getName());
 
     public static String lerLinha() {
         return new java.util.Scanner(System.in).nextLine();
@@ -12,9 +16,9 @@ public class AuxiliarDeConsole {
         String borda = repeat('═', largura);
         String linhaCentral = String.format("║%-50s║", "  " + titulo);
 
-        System.out.println("\n╔" + borda + "╗");
-        System.out.println(linhaCentral);
-        System.out.println("╚" + borda + "╝\n");
+        LOGGER.info("\n╔" + borda + "╗");
+        LOGGER.info(linhaCentral);
+        LOGGER.info("╚" + borda + "╝\n");
 
     }
 
