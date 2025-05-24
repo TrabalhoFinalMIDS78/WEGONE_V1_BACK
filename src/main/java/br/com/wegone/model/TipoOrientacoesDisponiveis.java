@@ -4,14 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.wegone.model.TipoOrientacaoDAO;
+
 public class TipoOrientacoesDisponiveis {
     
     private List<TipoOrientacao> ListaOrientacoesDisponiveis = new ArrayList<>();
+    private TipoOrientacaoDAO tipoOrientacaoDAO;
 
     public TipoOrientacoesDisponiveis(IdiomasDisponiveis idiomas) {
+        
+        this.tipoOrientacaoDAO = new TipoOrientacaoDAO();
+        carregarTiposOrientacao(idiomas);
+
+    }
+
+    private void carregarTiposOrientacao(IdiomasDisponiveis idiomas){
+
+        ListaOrientacoesDisponiveis = tipoOrientacaoDAO.carregarTiposOrientacao(idiomas);
 
         // Criando as Orientações do Sistema WEGONE
-
+        if(ListaOrientacoesDisponiveis.isEmpty()){
         // Orientação 001-WO Manual de Operação
         TipoOrientacao manualOperacaoOrientacao = new TipoOrientacao("001-WO");
 
@@ -77,7 +89,7 @@ public class TipoOrientacoesDisponiveis {
         operacoesSetoriaisOrientacao.setNomePorIdioma(idiomas.buscarPorCodigo("zh"), "部门操作");
 
         ListaOrientacoesDisponiveis.add(operacoesSetoriaisOrientacao);
-        
+        }
     }
 
     public List<TipoOrientacao> getListaOrientacoesDisponiveis() {

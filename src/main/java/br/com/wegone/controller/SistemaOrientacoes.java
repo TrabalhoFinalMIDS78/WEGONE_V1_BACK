@@ -10,6 +10,8 @@ import br.com.wegone.model.IdiomasDisponiveis;
 import br.com.wegone.model.Orientacao;
 import br.com.wegone.model.TipoOrientacao;
 import br.com.wegone.model.TipoOrientacoesDisponiveis;
+import br.com.wegone.model.OrientacaoDAO;
+import br.com.wegone.model.IdiomaDAO;
 
 public class SistemaOrientacoes {
 
@@ -18,8 +20,12 @@ public class SistemaOrientacoes {
     private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(idiomasDisponiveis);
     private static Scanner sc = new Scanner(System.in);
     private static Idioma idiomaAtual;
+    private static IdiomaDAO idiomaDAO = new IdiomaDAO();
+    private static OrientacaoDAO orientacaoDAO = new OrientacaoDAO();
 
     public static void main(String[] args) {
+
+        listaOrientacoes = orientacaoDAO.listarTodas(idiomasDisponiveis, tipoOrientacoesDisponiveis);
 
         // Mensagem Inicial WEGONE
         exibirLogo();
@@ -480,7 +486,8 @@ public class SistemaOrientacoes {
 
         }
 
-        listaOrientacoes.add(novaOrientacao);
+        orientacaoDAO.salvar(novaOrientacao);
+        listaOrientacoes = orientacaoDAO.listarTodas(idiomasDisponiveis, tipoOrientacoesDisponiveis);
 
         System.out.println("\n----> Sucesso! Orientação cadastrada com sucesso! <----");
 
@@ -593,6 +600,8 @@ public class SistemaOrientacoes {
             return;
             
         }
+        orientacaoDAO.salvar(orientacaoEdicao);
+        listaOrientacoes = orientacaoDAO.listarTodas(idiomasDisponiveis, tipoOrientacoesDisponiveis);
 
         System.out.println("\n----> Sucesso! Orientação atualizada com sucesso! <----");
 
@@ -609,7 +618,8 @@ public class SistemaOrientacoes {
 
         if (orientacaoExclusao != null) {
 
-            listaOrientacoes.remove(orientacaoExclusao);
+            orientacaoDAO.excluir(orientacaoExclusao.getCodigo());
+            listaOrientacoes = orientacaoDAO.listarTodas(idiomasDisponiveis, tipoOrientacoesDisponiveis);
             System.out.println("\nSucesso! Orientação removida com sucesso.");
 
         } else {
