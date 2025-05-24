@@ -16,19 +16,24 @@ public class IdiomaMensagens {
      * recai para o bundle padrão (sem sufixo).
      */
     public IdiomaMensagens() {
-
         String codigoAtual = IdiomaSelecionado.getIdiomaAtual();
-        String[] partesCodigo = codigoAtual.split("_"); // ["pt", "BR"]
-
         ResourceBundle tmp;
 
         try {
+            Locale locale;
+            String[] partesCodigo = codigoAtual.split("_");
 
-            Locale locale = new Locale(partesCodigo[0], partesCodigo[1]);
+            if (partesCodigo.length == 2) {
+                // Idioma com região (ex.: pt_BR)
+                locale = new Locale(partesCodigo[0], partesCodigo[1]);
+            } else {
+                // Idioma sem região (ex.: pt)
+                locale = new Locale(partesCodigo[0]);
+            }
 
             tmp = ResourceBundle.getBundle(BASENAME, locale);
 
-        } catch (MissingResourceException | ArrayIndexOutOfBoundsException e) {
+        } catch (MissingResourceException e) {
             System.err.println("Aviso: não encontrei propriedades para idioma '" + codigoAtual + "'. Usando padrão pt_BR.");
             tmp = ResourceBundle.getBundle(BASENAME, Locale.ROOT);
         }
@@ -36,21 +41,17 @@ public class IdiomaMensagens {
     }
 
     /**
+     * Busca uma mensagem pelo bundle carregado.
+     * 
+     * @param chave Chave da mensagem no arquivo .properties
+     * @return Mensagem correspondente à chave
      * @throws IllegalArgumentException se a chave não existir nem no bundle padrão
      */
     public String get(String chave) {
-
         try {
-
             return bundle.getString(chave);
-
         } catch (MissingResourceException e) {
-
-            // última salvação: lançar uma exceção clara de configuração
-            throw new IllegalArgumentException(
-
-                "Chave de mensagem não encontrada: " + chave, e);
-                
+            throw new IllegalArgumentException("Chave de mensagem não encontrada: " + chave, e);
         }
     }
 }

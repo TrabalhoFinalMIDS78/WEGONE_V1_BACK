@@ -30,6 +30,17 @@ public class IdiomaSelecionado {
     }
 
     public static String getIdiomaAtual() {
+
         return codigoAtual;
+    }
+
+    public static Locale getLocaleIdiomaAtual() {
+
+        String[] parts = IdiomaSelecionado.getIdiomaAtual().split("_");
+        
+        Locale locale = parts.length > 1 ? new Locale(parts[0], parts[1]) : new Locale(parts[0]);
+
+        return locale;
+
     }
 }

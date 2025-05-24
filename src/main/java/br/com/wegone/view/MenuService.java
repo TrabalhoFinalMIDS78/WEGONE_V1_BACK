@@ -3,15 +3,18 @@ package br.com.wegone.view;
 import java.util.ResourceBundle;
 
 import br.com.wegone.service.IdiomaMensagens;
-import br.com.wegone.
+import br.com.wegone.core.*;
 
 public class MenuService {
 
-    private ResourceBundle mensagens = ResourceBundle.getBundle("i18n.menu", IdiomaSelecionado.getLocaleAtual());
+    private static IdiomaMensagens mensagem = new IdiomaMensagens();
+    private static AuxiliarDeConsole auxiliar = new AuxiliarDeConsole();
+
+    private final static int LARGURA_MENU = 50;
 
     // Exibir Logo
 
-    private static void exibirLogo() {
+    public static void exibirLogo() {
         System.out.println("\n╔══════════════════════════════════════════════════╗");
         System.out.println("║                                                  ║");
         System.out.println("║            ██     ██ ███████  ██████             ║");
@@ -47,5 +50,55 @@ public class MenuService {
         System.out.println("╚══════════════════════════════════════════════════╝\n");
 
     }
+
+    // Exibir Menu de Login ou Cadastro
+
+    public static void exibirMenuAcesso() {
+
+        System.out.println("\n╔══════════════════════════════════════════════════╗");
+        System.out.println("║" + auxiliar.centralizarTexto(mensagem.get("menu.acesso.titulo"), LARGURA_MENU) + "║");
+        System.out.println("╠══════════════════════════════════════════════════╣");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.acesso.login"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.acesso.cadastro"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.acesso.sair"), LARGURA_MENU) + "║");
+        System.out.println("╚══════════════════════════════════════════════════╝\n");
+
+    }
+
+    // Exibir Menu Principal
+
+    public static void exibirMenuOrientacoes() {
+
+        System.out.println("\n╔══════════════════════════════════════════════════╗");
+        System.out.println("║" + auxiliar.centralizarTexto(mensagem.get("menu.orientacoes.titulo"), LARGURA_MENU) + "║");
+        System.out.println("╠══════════════════════════════════════════════════╣");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.orientacoes.cadastrar"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.orientacoes.editar"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.orientacoes.excluir"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.orientacoes.pesquisar"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.orientacoes.listar"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.orientacoes.sair"), LARGURA_MENU) + "║");
+        System.out.println("╚══════════════════════════════════════════════════╝\n");
+
+    }
+
+    // Menu de Tratamento de Erros
+
+    // Tratar Erro Escolha de Idiomas
+
+    public static void tratarErroEscolhaIdioma() {
+
+        System.out.println("\n╔══════════════════════════════════════════════════╗");
+        System.out.println("║" + auxiliar.centralizarTexto(mensagem.get("menu.tratar.erro.idioma.titulo"), LARGURA_MENU) + "║");
+        System.out.println("╠══════════════════════════════════════════════════╣");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.tratar.erro.idioma.tentar.novamente"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.tratar.erro.idioma.iniciar.ptbr"), LARGURA_MENU) + "║");
+        System.out.println("║" + auxiliar.alinharEsquerda(mensagem.get("menu.tratar.erro.idioma.sair"), LARGURA_MENU) + "║");
+        System.out.println("╚══════════════════════════════════════════════════╝\n");
+
+    }
+
+    // Tratar Erro Escolha de Acesso
+
 
 }
