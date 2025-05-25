@@ -1,4 +1,6 @@
-package br.com.wegone.repository;
+/*
+ * 
+ * package br.com.wegone.repository;
 
 import br.com.wegone.model.Usuario;
 import java.util.ArrayList;
@@ -36,3 +38,6 @@ public class InMemoryUsuarioRepository {
         return new ArrayList<>(usuarios);
     }
 }
+ * 
+ */
+

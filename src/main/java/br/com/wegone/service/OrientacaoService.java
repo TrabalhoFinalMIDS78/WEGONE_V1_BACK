@@ -16,13 +16,16 @@ import br.com.wegone.service.*;
 
 public class OrientacaoService {
 
+    // Refatorar para a integração com Banco de Dados
+
     // Atributos
 
     private static List<Orientacao> listaOrientacoes = new ArrayList<>();
     private static IdiomaService idiomaService = new IdiomaService();
 
-    // Métodos auxiliares para as Listas de Orientações (BOA PARTE VAI TER QUE MUDAR QUANDO INSERIRMOS O BANCO DE DADOS)
- 
+    // Métodos auxiliares para as Listas de Orientações (BOA PARTE VAI TER QUE MUDAR
+    // QUANDO INSERIRMOS O BANCO DE DADOS)
+
     private static Orientacao buscarPorCodigo(String codigo) {
         return listaOrientacoes.stream()
                 .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
@@ -34,11 +37,11 @@ public class OrientacaoService {
 
     // Método para cadastrar uma nova Orientação
     public static void cadastrarOrientacao(
-        // Parâmetros para o cadastro de uma nova Orientação
-        String codigo,
-        TipoOrientacao tipo,
-        Map<Idioma, String> titulos,
-        Map<Idioma, String> conteudos
+            // Parâmetros para o cadastro de uma nova Orientação
+            String codigo,
+            TipoOrientacao tipo,
+            Map<Idioma, String> titulos,
+            Map<Idioma, String> conteudos
 
     ) throws DadosIncompletosException {
 
@@ -81,10 +84,10 @@ public class OrientacaoService {
     // Método para Editar uma Orientação
 
     public static void editarOrientacao(
-        // Parâmetros para o cadastro de uma nova Orientação
-        String codigo,
-        Map<Idioma, String> novosTitulos,
-        Map<Idioma, String> novosConteudos
+            // Parâmetros para o cadastro de uma nova Orientação
+            String codigo,
+            Map<Idioma, String> novosTitulos,
+            Map<Idioma, String> novosConteudos
 
     ) {
 
@@ -137,7 +140,7 @@ public class OrientacaoService {
 
             if (orientacaoPesquisa.getCodigo().equalsIgnoreCase(pesquisa)) {
 
-                    return orientacaoPesquisa;
+                return orientacaoPesquisa;
 
             } else {
 
@@ -182,8 +185,8 @@ public class OrientacaoService {
 
     public static List<Orientacao> listarOrientacoes(
 
-        TipoOrientacao tipoOrientacaoFiltro,
-        boolean ordenarPorMaisRecente
+            TipoOrientacao tipoOrientacaoFiltro,
+            boolean ordenarPorMaisRecente
 
     ) {
 
@@ -224,10 +227,7 @@ public class OrientacaoService {
         }
 
         return listaFiltrada;
-        
+
     }
 
 }
-
-
-

@@ -33,6 +33,8 @@ public class App {
 
         menu.selecionarIdioma();
 
+        menu.selecionarMenuAcesso();
+
         // Definir Usuário
 
 

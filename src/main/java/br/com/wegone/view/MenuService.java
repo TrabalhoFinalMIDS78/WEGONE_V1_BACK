@@ -3,7 +3,6 @@ package br.com.wegone.view;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import br.com.wegone.service.ExceptionMessageResolver;
 import br.com.wegone.service.IdiomaMensagens;
 import br.com.wegone.service.OrientacaoService;
 import br.com.wegone.service.ValidadorService;
@@ -235,20 +234,24 @@ public class MenuService {
 
                         case "1":
 
-                            auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.acesso.login.titulo"), LARGURA_MENU));
+                            auxiliar.exibirTitulo(
+                                    auxiliar.centralizarTexto(mensagem.get("menu.acesso.login.titulo"), LARGURA_MENU));
 
                             LOGGER.info("\n" + mensagem.get("menu.acesso.login.matricula"));
                             String matricula = AuxiliarDeConsole.lerLinha();
                             LOGGER.info("\n" + mensagem.get("menu.acesso.login.senha"));
                             String senha = AuxiliarDeConsole.lerLinha();
                             Usuario usuario = usuarioService.login(matricula, senha);
-                            auxiliar.exibirTitulo(auxiliar.centralizarTexto(ExceptionMessageResolver.resolve("exception.user.login_success", u.getNome()), LARGURA_MENU));
+                            auxiliar.exibirTitulo(auxiliar.centralizarTexto(
+                                    String.format(mensagem.get("exception.user.login_success"), usuario.getNome()),
+                                    LARGURA_MENU));
 
                             break;
 
                         case "2":
 
-                            auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.acesso.cadastro.titulo"), LARGURA_MENU));
+                            auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.acesso.cadastro.titulo"),
+                                    LARGURA_MENU));
 
                             LOGGER.info(mensagem.get("menu.acesso.cadastro.matricula"));
                             String mat = AuxiliarDeConsole.lerLinha();
@@ -259,7 +262,10 @@ public class MenuService {
                             LOGGER.info(mensagem.get("menu.acesso.cadastro.senha"));
                             String senhaCadastro = AuxiliarDeConsole.lerLinha();
                             Usuario novoUsuario = usuarioService.cadastrar(mat, nome, email, senhaCadastro);
-                            auxiliar.exibirTitulo(auxiliar.centralizarTexto(ExceptionMessageResolver.resolve("exception.user.register_success", novoUsuario.getNome()), LARGURA_MENU));
+                            auxiliar.exibirTitulo(auxiliar.centralizarTexto(
+                                    String.format(mensagem.get("exception.user.register_success"),
+                                            novoUsuario.getNome()),
+                                    LARGURA_MENU));
 
                             break;
 
@@ -270,30 +276,20 @@ public class MenuService {
                             break;
                         default:
 
-                            LOGGER.warning(ExceptionMessageResolver.resolve("exception.dados.invalid_choice"));
+                            LOGGER.warning(mensagem.get("main.input.invalido"));
 
                             break;
                     }
 
                 }
 
-            } catch (DadosIncompletosException | AutenticacaoException e) {
-                Object[] params = new Object[]{};
-                String key = "exception.unknown";
-                if (e instanceof DadosIncompletosException) {
-                    params = ((DadosIncompletosException) e).getParams();
-                    key = ((DadosIncompletosException) e).getKey();
-                } else if (e instanceof AutenticacaoException) {
-                    key = ((AutenticacaoException) e).getKey();
-                }
-                String msg = ExceptionMessageResolver.resolve(
-                    key,
-                    params
-                );
-                        System.out.println(msg);
-                    }
-                }
+            } catch (DadosIncompletosException e) {
+
+                LOGGER.severe("Error: " + e.getMessage());
+
             }
+        }
+    }
 
     public static void selecionarMenuPrincipal() {
 
