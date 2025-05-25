@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class IdiomasDisponiveis {
-    
+
     // Atributos
 
     private List<Idioma> listaIdiomas = new ArrayList<>();
@@ -33,16 +33,16 @@ public class IdiomasDisponiveis {
         Idioma novo = new Idioma().construtor(codigo, nome);
 
         adicionarIdioma(novo); // Reutiliza o método acima
-        
+
     }
 
     public void carregarIdiomas() {
 
-        listaIdiomas.add(new Idioma().construtor("pt", "Português"));
-        listaIdiomas.add(new Idioma().construtor("en", "Inglês"));
-        listaIdiomas.add(new Idioma().construtor("es", "Espanhol"));
-        listaIdiomas.add(new Idioma().construtor("de", "Alemão"));
-        listaIdiomas.add(new Idioma().construtor("zh", "Mandarim"));
+        listaIdiomas.add(new Idioma().construtor("pt_BR", "Português (Brasil)"));
+        listaIdiomas.add(new Idioma().construtor("en_US", "English (United States)"));
+        listaIdiomas.add(new Idioma().construtor("es_ES", "Espanõl (España)"));
+        listaIdiomas.add(new Idioma().construtor("de_DE", "Deutsch (Deutschland)"));
+        listaIdiomas.add(new Idioma().construtor("zh_CN", "中文 (Zhōngwén)"));
 
     }
 
@@ -54,8 +54,8 @@ public class IdiomasDisponiveis {
 
     public Idioma buscarPorCodigo(String codigo) {
         Optional<Idioma> idioma = listaIdiomas.stream()
-            .filter(i -> i.getCodigo().equals(codigo))
-            .findFirst();
+                .filter(i -> i.getCodigo().equals(codigo))
+                .findFirst();
         return idioma.orElse(null);
     }
 

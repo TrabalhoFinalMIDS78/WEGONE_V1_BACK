@@ -23,6 +23,8 @@ public class OrientacaoService {
     private static List<Orientacao> listaOrientacoes = new ArrayList<>();
     private static IdiomaService idiomaService = new IdiomaService();
 
+    private static IdiomaMensagens mensagem = new IdiomaMensagens();
+
     // Métodos auxiliares para as Listas de Orientações (BOA PARTE VAI TER QUE MUDAR
     // QUANDO INSERIRMOS O BANCO DE DADOS)
 
@@ -59,11 +61,13 @@ public class OrientacaoService {
             // Validações
 
             if (titulo == null || titulo.isBlank()) {
-                throw new DadosIncompletosException("Título em " + idiomas.getNome() + " não pode estar vazio.");
+                throw new DadosIncompletosException(
+                        mensagem.get("exception.orientacao.cadastro.titulo.vazio") + " " + idiomas.getNome());
             }
 
             if (conteudo == null || conteudo.isBlank()) {
-                throw new DadosIncompletosException("Conteúdo em " + idiomas.getNome() + " não pode estar vazio.");
+                throw new DadosIncompletosException(
+                        mensagem.get("exception.orientacao.cadastro.conteudo.vazio") + " " + idiomas.getNome());
             }
 
             // Adiciona os títulos e conteúdos à Orientação
@@ -144,7 +148,8 @@ public class OrientacaoService {
 
             } else {
 
-                throw new DadosIncompletosException("Orientação de código " + pesquisa + " não encontrada.");
+                throw new DadosIncompletosException(
+                        mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + pesquisa);
 
             }
 
@@ -176,7 +181,8 @@ public class OrientacaoService {
             if (!titulosEncontrados.isEmpty()) {
                 resultados.put(orientacao, titulosEncontrados);
             } else {
-                throw new DadosIncompletosException("Nenhum título encontrado para o termo: " + termoPesquisa);
+                throw new DadosIncompletosException(
+                        mensagem.get("exception.orientacao.pesquisa.termo_nao_encontrado") + " " + termoPesquisa);
             }
         }
 

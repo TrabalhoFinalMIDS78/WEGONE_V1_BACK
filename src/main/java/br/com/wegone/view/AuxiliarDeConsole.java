@@ -32,7 +32,7 @@ public class AuxiliarDeConsole {
 
     public static void separador() {
 
-        System.out.println("\n" + repeat('═', 52));
+        LOGGER.info("\n" + repeat('═', 52));
 
     }
 

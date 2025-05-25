@@ -1,5 +1,6 @@
 package br.com.wegone.view;
 
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -7,6 +8,9 @@ import br.com.wegone.service.IdiomaMensagens;
 import br.com.wegone.service.OrientacaoService;
 import br.com.wegone.service.ValidadorService;
 import br.com.wegone.core.*;
+import br.com.wegone.model.IdiomasDisponiveis;
+import br.com.wegone.model.TipoOrientacao;
+import br.com.wegone.model.TipoOrientacoesDisponiveis;
 import br.com.wegone.model.Usuario;
 import br.com.wegone.service.UsuarioService;
 import br.com.wegone.exception.*;
@@ -21,6 +25,9 @@ public class MenuService {
     private static UsuarioService usuarioService = new UsuarioService();
 
     private static OrientacaoService orientacaoService = new OrientacaoService();
+    private static IdiomasDisponiveis idiomasDisponiveis = new IdiomasDisponiveis();
+    private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(idiomasDisponiveis);
+    private static String idiomaAtualNome = IdiomaSelecionado.getIdiomaAtualNome();
 
     // Escolha
 
@@ -429,6 +436,10 @@ public class MenuService {
 
                 LOGGER.severe("Error: " + e.getMessage());
 
+            } finally {
+
+                auxiliar.separador(); // Separador após cada operação
+
             }
 
         }
@@ -437,9 +448,44 @@ public class MenuService {
 
     // Métodos de Cadastro, Edição, Exclusão, Pesquisa e Listagem
 
+    private static void escolhaTipoOrientacao() {
+
+        List<TipoOrientacao> tipos = tipoOrientacoesDisponiveis.getListaOrientacoesDisponiveis();
+
+        auxiliar.exibirTitulo(
+                auxiliar.centralizarTexto(mensagem.get("menu.exibir.titulo.tipos_orientacoes"), LARGURA_MENU));
+
+        for (int i = 0; i < tipos.size(); i++) {
+
+            System.out.printf("%d- Nome: %-35s | Código: %s\n", i + 1, tipos.get(i).getNome(IdiomaSelecionado.getIdiomaAtual()),
+                    tipos.get(i).getCodigo());
+
+        }
+
+        for (int i = 0; i < tipos.size(); i++) {
+            TipoOrientacao t = tipos.get(i);
+            LOGGER.info(
+                String.format(
+                  "%d - " + mensagem.get("menu.exibir.nome.tipos_orientacoes") + " %-35s | " + mensagem.get("menu.exibir.codigo.tipos_orientacoes") + " (%s)%n",
+                  i + 1,
+                  t.getNome(idiomaAtualNome),
+                  t.getCodigo()
+                )
+            );
+    }
+
+    }
+
     public static void cadastrarOrientacao() {
 
-        orientacaoService.cadastrarOrientacao();
+        auxiliar.exibirTitulo(
+                auxiliar.centralizarTexto(mensagem.get("menu.exibir.cadastro.titulo"), LARGURA_MENU));
+
+        String codigo = auxiliar.lerLinha();
+
+
+
+
 
     }
 
