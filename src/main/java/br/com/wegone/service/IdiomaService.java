@@ -7,6 +7,8 @@ import java.util.List;
 
 public class IdiomaService {
 
+    // Classe intermediária, uma ponte para IdiomasDisponiveis
+
     private IdiomasDisponiveis idiomasDisponiveis;
 
     public IdiomaService() {

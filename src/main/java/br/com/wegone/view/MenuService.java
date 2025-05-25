@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import br.com.wegone.service.IdiomaMensagens;
+import br.com.wegone.service.IdiomaService;
 import br.com.wegone.service.OrientacaoService;
 import br.com.wegone.service.ValidadorService;
 import br.com.wegone.core.*;
@@ -16,6 +17,7 @@ import br.com.wegone.model.TipoOrientacao;
 import br.com.wegone.model.TipoOrientacoesDisponiveis;
 import br.com.wegone.model.Usuario;
 import br.com.wegone.exception.*;
+import br.com.wegone.model.Orientacao;
 
 public class MenuService {
 
@@ -30,6 +32,7 @@ public class MenuService {
     private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(
             idiomasDisponiveis);
     private static String idiomaAtualNome = IdiomaSelecionado.getIdiomaAtualNome();
+    private static IdiomaService idiomaService = new IdiomaService();
 
     // Escolha
 
@@ -567,7 +570,7 @@ public class MenuService {
         Map<Idioma, String> titulos = new LinkedHashMap<>();
         Map<Idioma, String> conteudos = new LinkedHashMap<>();
 
-        for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
+        for (Idioma idioma : idiomaService.getListaIdiomas()) {
             String t, c;
 
             while (true) {
@@ -609,10 +612,72 @@ public class MenuService {
         }
     }
 
-    public static void editarOrientacao() {
+    private static Orientacao buscarPorCodigo(String codigo) {
+        return orientacaoService.getListaOrientacoes().stream()
+                .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
+                .findFirst()
+                .orElse(null);
+    }
 
-        orientacaoService.editarOrientacao();
+    public void editarOrientacao() {
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(
+                        mensagem.get("menu.exibir.edicao.titulo"),
+                        LARGURA_MENU));
 
+        String codigo = null;
+
+        // 1. Solicitar código da orientação
+        while (true) {
+            LOGGER.info(mensagem.get("menu.prompt.codigo") + ": ");
+            String entrada = AuxiliarDeConsole.lerLinha();
+            try {
+                ValidadorService.validarInputVazio(entrada);
+                codigo = entrada.trim();
+                break;
+            } catch (DadosIncompletosException e) {
+                LOGGER.warning(e.getMessage());
+                erroGenerico();
+            }
+        }
+
+        // 2. Buscar orientação existente
+        Orientacao orientacao = buscarPorCodigo(codigo);
+        if (orientacao == null) {
+            LOGGER.warning(mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + codigo);
+            erroGenerico();
+            return;
+        }
+
+        // 3. Coletar novos títulos e conteúdos
+        Map<Idioma, String> novosTitulos = new LinkedHashMap<>();
+        Map<Idioma, String> novosConteudos = new LinkedHashMap<>();
+
+        for (Idioma idioma : idiomaService.getListaIdiomas()) {
+            String atualT = orientacao.getTitulo(idioma);
+            LOGGER.info("\n" + idioma.getNome() + ":");
+            LOGGER.info(mensagem.get("menu.editar.titulo.atual") + ": " + (atualT != null ? atualT : "[vazio]"));
+            LOGGER.info(mensagem.get("menu.editar.titulo.novo") + mensagem.get("menu.exibir.enter_manter") + ": ");
+            String t = AuxiliarDeConsole.lerLinha();
+            if (t != null && !t.isBlank())
+                novosTitulos.put(idioma, t);
+
+            String atualC = orientacao.getConteudo(idioma);
+            LOGGER.info(mensagem.get("menu.editar.conteudo.atual") + ": " + (atualC != null ? atualC : "[vazio]"));
+            LOGGER.info(mensagem.get("menu.editar.conteudo.novo") + mensagem.get("menu.exibir.enter_manter") + ": ");
+            String c = AuxiliarDeConsole.lerLinha();
+            if (c != null && !c.isBlank())
+                novosConteudos.put(idioma, c);
+        }
+
+        // 4. Chamar service para editar
+        try {
+            OrientacaoService.editarOrientacao(codigo, novosTitulos, novosConteudos);
+            LOGGER.info(mensagem.get("exception.orientacao.edicao.sucesso"));
+        } catch (DadosIncompletosException e) {
+            LOGGER.warning(e.getMessage());
+            erroGenerico();
+        }
     }
 
     public static void excluirOrientacao() {
