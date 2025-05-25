@@ -1,6 +1,8 @@
 package br.com.wegone.view;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -8,11 +10,11 @@ import br.com.wegone.service.IdiomaMensagens;
 import br.com.wegone.service.OrientacaoService;
 import br.com.wegone.service.ValidadorService;
 import br.com.wegone.core.*;
+import br.com.wegone.model.Idioma;
 import br.com.wegone.model.IdiomasDisponiveis;
 import br.com.wegone.model.TipoOrientacao;
 import br.com.wegone.model.TipoOrientacoesDisponiveis;
 import br.com.wegone.model.Usuario;
-import br.com.wegone.service.UsuarioService;
 import br.com.wegone.exception.*;
 
 public class MenuService {
@@ -21,12 +23,12 @@ public class MenuService {
     private static IdiomaMensagens mensagem = new IdiomaMensagens();
     private static final String MAIN_INICIAR_IDIOMA = "main.iniciar.idioma";
     private final static int LARGURA_MENU = 50;
-    private static AuxiliarDeConsole auxiliar = new AuxiliarDeConsole();
-    private static UsuarioService usuarioService = new UsuarioService();
+    private static AuxiliarDeConsole auxiliar;
 
     private static OrientacaoService orientacaoService = new OrientacaoService();
     private static IdiomasDisponiveis idiomasDisponiveis = new IdiomasDisponiveis();
-    private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(idiomasDisponiveis);
+    private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(
+            idiomasDisponiveis);
     private static String idiomaAtualNome = IdiomaSelecionado.getIdiomaAtualNome();
 
     // Escolha
@@ -44,6 +46,36 @@ public class MenuService {
 
         System.exit(0);
 
+    }
+
+    public static void erroGenerico() {
+        while (true) {
+            LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+            LOGGER.info("║" + auxiliar.centralizarTexto(mensagem.get("menu.erro.generico.titulo"), LARGURA_MENU) + "║");
+            LOGGER.info("╠══════════════════════════════════════════════════╣");
+            LOGGER.info(
+                    "║" + auxiliar.alinharEsquerda(mensagem.get("menu.erro.generico.tentar.novamente"), LARGURA_MENU)
+                            + "║");
+            LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.erro.generico.sair"), LARGURA_MENU) + "║");
+            LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+
+            LOGGER.info(mensagem.get("menu.erro.generico.escolha")); // Ex: "Escolha uma opção: "
+            String escolha = AuxiliarDeConsole.lerLinha();
+
+            switch (escolha) {
+                case "1":
+                    // Tentar novamente: pode chamar o menu principal ou outro método conforme o
+                    // contexto
+                    selecionarMenuPrincipal();
+                    return; // Sai do loop e do método
+                case "0":
+                    sairSistema(); // Encerra o sistema
+                    return;
+                default:
+                    LOGGER.warning(mensagem.get("main.input.invalido"));
+                    // O loop continua até o usuário digitar uma opção válida
+            }
+        }
     }
 
     // Exibir Logo
@@ -359,7 +391,7 @@ public class MenuService {
                     switch (escolhaErroMenuPrincipal) {
                         case "1":
                             // Tentar novamente
-                            selecionarMenuPrincipal();
+
                             break;
                         case "0":
                             sairSistema(); // Sair do sistema
@@ -378,6 +410,7 @@ public class MenuService {
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.exibir.cadastro.titulo"),
                                     LARGURA_MENU));
                             cadastrarOrientacao();
+                            opcaoSelecionadaComSucesso = true;
 
                             break;
 
@@ -386,6 +419,7 @@ public class MenuService {
                             auxiliar.exibirTitulo(
                                     auxiliar.centralizarTexto(mensagem.get("menu.exibir.edicao.titulo"), LARGURA_MENU));
                             editarOrientacao();
+                            opcaoSelecionadaComSucesso = true;
 
                             break;
 
@@ -394,6 +428,7 @@ public class MenuService {
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.exibir.exclusao.titulo"),
                                     LARGURA_MENU));
                             excluirOrientacao();
+                            opcaoSelecionadaComSucesso = true;
 
                             break;
 
@@ -402,6 +437,7 @@ public class MenuService {
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.exibir.pesquisa.titulo"),
                                     LARGURA_MENU));
                             pesquisarOrientacao();
+                            opcaoSelecionadaComSucesso = true;
 
                             break;
 
@@ -410,6 +446,7 @@ public class MenuService {
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.exibir.listagem.titulo"),
                                     LARGURA_MENU));
                             listarOrientacoes();
+                            opcaoSelecionadaComSucesso = true;
 
                             break;
 
@@ -418,6 +455,7 @@ public class MenuService {
                             auxiliar.exibirTitulo(auxiliar
                                     .centralizarTexto(mensagem.get("menu.exibir.trocar.idioma.titulo"), LARGURA_MENU));
                             selecionarIdioma();
+                            opcaoSelecionadaComSucesso = true;
 
                             break;
 
@@ -448,31 +486,55 @@ public class MenuService {
 
     // Métodos de Cadastro, Edição, Exclusão, Pesquisa e Listagem
 
-    private static void escolhaTipoOrientacao() {
+    private static TipoOrientacao escolhaTipoOrientacao() {
 
         List<TipoOrientacao> tipos = tipoOrientacoesDisponiveis.getListaOrientacoesDisponiveis();
 
         auxiliar.exibirTitulo(
-                auxiliar.centralizarTexto(mensagem.get("menu.exibir.titulo.tipos_orientacoes"), LARGURA_MENU));
+                auxiliar.centralizarTexto(
+                        mensagem.get("menu.exibir.titulo.tipos_orientacoes") + " ("
+                                + IdiomaSelecionado.getIdiomaAtualNome() + ")",
+                        LARGURA_MENU));
 
         for (int i = 0; i < tipos.size(); i++) {
+            TipoOrientacao tipo = tipos.get(i);
+            String template = "%d - %s %-35s | %s (%s)%n";
+            LOGGER.info(String.format(
+                    template,
+                    i + 1,
+                    mensagem.get("menu.exibir.nome.tipos_orientacoes"),
+                    tipo.getNome(IdiomaSelecionado.getIdiomaAtualObjeto()),
+                    mensagem.get("menu.exibir.codigo.tipos_orientacoes"),
+                    tipo.getCodigo()));
+        }
 
-            System.out.printf("%d- Nome: %-35s | Código: %s\n", i + 1, tipos.get(i).getNome(IdiomaSelecionado.getIdiomaAtual()),
-                    tipos.get(i).getCodigo());
+        LOGGER.info("\n" + mensagem.get("menu.exibir.selecionar.tipo_orientacao") + ": ");
+        String input = auxiliar.lerLinha();
+        int idx;
+
+        try {
+
+            idx = Integer.parseInt(input);
+
+        } catch (NumberFormatException e) {
+
+            LOGGER.warning(mensagem.get("menu.tratar.erro.input.invalido"));
+            erroGenerico();
+            return null;
 
         }
 
-        for (int i = 0; i < tipos.size(); i++) {
-            TipoOrientacao t = tipos.get(i);
-            LOGGER.info(
-                String.format(
-                  "%d - " + mensagem.get("menu.exibir.nome.tipos_orientacoes") + " %-35s | " + mensagem.get("menu.exibir.codigo.tipos_orientacoes") + " (%s)%n",
-                  i + 1,
-                  t.getNome(idiomaAtualNome),
-                  t.getCodigo()
-                )
-            );
-    }
+        if (idx < 1 || idx > tipos.size()) {
+
+            LOGGER.warning(mensagem.get("menu.tratar.erro.input.invalido") + "%n");
+
+            erroGenerico();
+
+            return null;
+
+        }
+
+        return tipos.get(idx - 1);
 
     }
 
@@ -481,12 +543,70 @@ public class MenuService {
         auxiliar.exibirTitulo(
                 auxiliar.centralizarTexto(mensagem.get("menu.exibir.cadastro.titulo"), LARGURA_MENU));
 
-        String codigo = auxiliar.lerLinha();
+        String codigo;
+        while (true) {
+            System.out.print(mensagem.get("menu.prompt.codigo") + ": ");
+            codigo = auxiliar.lerLinha();
+            try {
+                ValidadorService.validarCodigoCadastro(codigo, OrientacaoService.getListaOrientacoes());
+                break;
+            } catch (DadosIncompletosException e) {
+                LOGGER.warning(e.getMessage());
+            }
+        }
 
+        TipoOrientacao tipo = escolhaTipoOrientacao();
+        if (tipo == null) {
+            LOGGER.warning(mensagem.get("menu.tratar.erro.input.invalido"));
 
+            erroGenerico();
 
+            return;
+        }
 
+        Map<Idioma, String> titulos = new LinkedHashMap<>();
+        Map<Idioma, String> conteudos = new LinkedHashMap<>();
 
+        for (Idioma idioma : idiomasDisponiveis.getListaIdiomas()) {
+            String t, c;
+
+            while (true) {
+                System.out.print(mensagem.get("menu.prompt.titulo") + " " + idioma.getNome() + ": ");
+                t = auxiliar.lerLinha();
+                if (t == null || t.isBlank()) {
+                    LOGGER.warning(
+                            mensagem.get("exception.orientacao.cadastro.titulo.vazio") + " " + idioma.getNome());
+                    continue;
+                }
+                break;
+            }
+            while (true) {
+                System.out.print(mensagem.get("menu.prompt.conteudo") + " " + idioma.getNome() + ": ");
+                c = auxiliar.lerLinha();
+                if (c == null || c.isBlank()) {
+                    LOGGER.warning(
+                            mensagem.get("exception.orientacao.cadastro.conteudo.vazio") + " " + idioma.getNome());
+                    continue;
+                }
+                break;
+            }
+
+            titulos.put(idioma, t);
+            conteudos.put(idioma, c);
+
+        }
+
+        try {
+
+            OrientacaoService.cadastrarOrientacao(codigo, tipo, titulos, conteudos);
+            LOGGER.info(mensagem.get("exception.orientacao.cadastro.sucesso"));
+
+        } catch (DadosIncompletosException e) {
+            LOGGER.warning(e.getMessage());
+
+            erroGenerico();
+
+        }
     }
 
     public static void editarOrientacao() {

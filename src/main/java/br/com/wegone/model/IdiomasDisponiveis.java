@@ -40,7 +40,7 @@ public class IdiomasDisponiveis {
 
         listaIdiomas.add(new Idioma().construtor("pt_BR", "Português (Brasil)"));
         listaIdiomas.add(new Idioma().construtor("en_US", "English (United States)"));
-        listaIdiomas.add(new Idioma().construtor("es_ES", "Espanõl (España)"));
+        listaIdiomas.add(new Idioma().construtor("es_ES", "Español (España)"));
         listaIdiomas.add(new Idioma().construtor("de_DE", "Deutsch (Deutschland)"));
         listaIdiomas.add(new Idioma().construtor("zh_CN", "中文 (Zhōngwén)"));
 
@@ -49,6 +49,21 @@ public class IdiomasDisponiveis {
     public List<Idioma> getListaIdiomas() {
 
         return listaIdiomas;
+
+    }
+
+    // IdiomasDisponiveis.java
+    public Idioma getIdiomaPadrao() {
+
+        // Retorna o idioma com código "pt_BR" ou o primeiro da lista
+        Idioma padrao = buscarPorCodigo("pt_BR");
+        if (padrao != null) {
+            return padrao;
+        } else if (!listaIdiomas.isEmpty()) {
+            return listaIdiomas.get(0);
+        } else {
+            return null;
+        }
 
     }
 

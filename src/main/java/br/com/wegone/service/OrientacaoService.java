@@ -35,6 +35,10 @@ public class OrientacaoService {
                 .orElse(null);
     }
 
+    public static List<Orientacao> getListaOrientacoes() {
+        return listaOrientacoes;
+    }
+
     // Métodos CRUD Service
 
     // Método para cadastrar uma nova Orientação
