@@ -1,5 +1,6 @@
 package br.com.wegone.view;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,6 @@ public class MenuService {
                     return; // Sai do loop e do método
                 case "0":
                     sairSistema(); // Encerra o sistema
-                    return;
                 default:
                     LOGGER.warning(mensagem.get("main.input.invalido"));
                     // O loop continua até o usuário digitar uma opção válida
@@ -638,63 +638,278 @@ public class MenuService {
             } catch (DadosIncompletosException e) {
                 LOGGER.warning(e.getMessage());
                 erroGenerico();
+
+                return;
             }
         }
 
         // 2. Buscar orientação existente
         Orientacao orientacao = buscarPorCodigo(codigo);
         if (orientacao == null) {
-            LOGGER.warning(mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + codigo);
+
+            AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(
+                            mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + codigo,
+                            LARGURA_MENU));
+
             erroGenerico();
+
             return;
         }
 
-        // 3. Coletar novos títulos e conteúdos
-        Map<Idioma, String> novosTitulos = new LinkedHashMap<>();
-        Map<Idioma, String> novosConteudos = new LinkedHashMap<>();
+        // Validação da Orientação
 
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(
+                        mensagem.get("menu.orientacao.encontrada"),
+                        LARGURA_MENU));
+
+        LOGGER.info(mensagem.get("menu.orientacao.codigo") + ": " + orientacao.getCodigo());
+        LOGGER.info(mensagem.get("menu.orientacao.tipo") + ": "
+                + orientacao.getTipo().getNome(IdiomaSelecionado.getIdiomaAtualObjeto()));
+
+        LOGGER.info(mensagem.get("menu.orientacao.titulos") + ":"); // Mostra os títulos em cada Idioma
         for (Idioma idioma : idiomaService.getListaIdiomas()) {
-            String atualT = orientacao.getTitulo(idioma);
-            LOGGER.info("\n" + idioma.getNome() + ":");
-            LOGGER.info(mensagem.get("menu.editar.titulo.atual") + ": " + (atualT != null ? atualT : "[vazio]"));
-            LOGGER.info(mensagem.get("menu.editar.titulo.novo") + mensagem.get("menu.exibir.enter_manter") + ": ");
-            String t = AuxiliarDeConsole.lerLinha();
-            if (t != null && !t.isBlank())
-                novosTitulos.put(idioma, t);
-
-            String atualC = orientacao.getConteudo(idioma);
-            LOGGER.info(mensagem.get("menu.editar.conteudo.atual") + ": " + (atualC != null ? atualC : "[vazio]"));
-            LOGGER.info(mensagem.get("menu.editar.conteudo.novo") + mensagem.get("menu.exibir.enter_manter") + ": ");
-            String c = AuxiliarDeConsole.lerLinha();
-            if (c != null && !c.isBlank())
-                novosConteudos.put(idioma, c);
+            String titulo = orientacao.getTitulo(idioma);
+            LOGGER.info("  " + idioma.getNome() + ": " + (titulo != null ? titulo : "[vazio]"));
         }
 
-        // 4. Chamar service para editar
+        LOGGER.info(mensagem.get("menu.orientacao.conteudos") + ":"); // Mostra os conteúdos em cada Idioma
+        for (Idioma idioma : idiomaService.getListaIdiomas()) {
+            String conteudo = orientacao.getConteudo(idioma);
+            LOGGER.info("  " + idioma.getNome() + ": " + (conteudo != null ? conteudo : "[vazio]"));
+        }
+
+        LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+        LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(
+                mensagem.get("menu.prompt.confirmar"), LARGURA_MENU) + "║"); // 1- Confirmar
+        LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(
+                mensagem.get("menu.prompt.nao_confirmar"), LARGURA_MENU) + "║"); // 2- Incorreta
+        LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+
+        escolha();
+
+        String inputConfirmacaoEdicao = auxiliar.lerLinha();
+
         try {
-            OrientacaoService.editarOrientacao(codigo, novosTitulos, novosConteudos);
-            LOGGER.info(mensagem.get("exception.orientacao.edicao.sucesso"));
+
+            ValidadorService.validarInputVazio(inputConfirmacaoEdicao);
+
         } catch (DadosIncompletosException e) {
+
             LOGGER.warning(e.getMessage());
+
             erroGenerico();
+
+            return;
         }
+
+        if (inputConfirmacaoEdicao.equals("1")) {
+
+            AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(
+                            mensagem.get("menu.orientacao.confirmada.edicao"),
+                            LARGURA_MENU));
+
+            // 3. Coletar novos títulos e conteúdos
+            Map<Idioma, String> novosTitulos = new LinkedHashMap<>();
+            Map<Idioma, String> novosConteudos = new LinkedHashMap<>();
+
+            for (Idioma idioma : idiomaService.getListaIdiomas()) {
+                String atualT = orientacao.getTitulo(idioma);
+                LOGGER.info("\n" + idioma.getNome() + ":");
+                LOGGER.info(mensagem.get("menu.editar.titulo.atual") + ": " + (atualT != null ? atualT : "[vazio]"));
+                LOGGER.info(mensagem.get("menu.editar.titulo.novo") + mensagem.get("menu.exibir.enter_manter") + ": ");
+                String t = AuxiliarDeConsole.lerLinha();
+                if (t != null && !t.isBlank())
+                    novosTitulos.put(idioma, t);
+
+                String atualC = orientacao.getConteudo(idioma);
+                LOGGER.info(mensagem.get("menu.editar.conteudo.atual") + ": " + (atualC != null ? atualC : "[vazio]"));
+                LOGGER.info(
+                        mensagem.get("menu.editar.conteudo.novo") + mensagem.get("menu.exibir.enter_manter") + ": ");
+                String c = AuxiliarDeConsole.lerLinha();
+                if (c != null && !c.isBlank())
+                    novosConteudos.put(idioma, c);
+            }
+
+            // 4. Chamar service para editar
+            try {
+                OrientacaoService.editarOrientacao(codigo, novosTitulos, novosConteudos);
+                LOGGER.info(mensagem.get("exception.orientacao.edicao.sucesso"));
+            } catch (DadosIncompletosException e) {
+                LOGGER.warning(e.getMessage());
+                erroGenerico();
+            }
+
+        } else if (inputConfirmacaoEdicao.equals("2"))
+
+        {
+
+            AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(
+                            mensagem.get("menu.orientacao.nao_confirmada.edicao"),
+                            LARGURA_MENU));
+
+            erroGenerico();
+
+            return;
+
+        } else {
+
+            erroGenerico();
+
+            return;
+        }
+
     }
 
     public static void excluirOrientacao() {
 
-        orientacaoService.excluirOrientacao();
+        // orientacaoService.excluirOrientacao();
 
     }
 
-    public static void pesquisarOrientacao() {
+    // Métodos de Pesquisa
 
-        orientacaoService.pesquisarOrientacao();
+    public void pesquisarOrientacao() {
+        while (true) {
+            AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(
+                            mensagem.get("menu.pesquisa.titulo"), LARGURA_MENU));
+
+            System.out.println(mensagem.get("menu.pesquisa.opcao.codigo")); // Criar Menu
+            System.out.println(mensagem.get("menu.pesquisa.opcao.titulo"));
+            System.out.println(mensagem.get("menu.pesquisa.opcao.voltar"));
+            System.out.print(mensagem.get("menu.pesquisa.prompt.opcao") + " ");
+
+            String opcao = AuxiliarDeConsole.lerLinha();
+
+            switch (opcao) {
+                case "1":
+                    pesquisarPorCodigo();
+                    break;
+                case "2":
+                    pesquisarPorTitulo();
+                    break;
+                case "0":
+                    return;
+                default:
+                    LOGGER.warning(mensagem.get("main.input.invalido"));
+            }
+            AuxiliarDeConsole.separador();
+        }
+    }
+
+    private void pesquisarPorCodigo() {
+
+        System.out.print(mensagem.get("menu.pesquisa.prompt.codigo") + " ");
+        String codigo = AuxiliarDeConsole.lerLinha();
+
+        try {
+
+            Orientacao o = orientacaoService.pesquisarOrientacaoPorCodigo(codigo);
+            exibirDetalhesOrientacao(o);
+
+        } catch (DadosIncompletosException e) {
+
+            LOGGER.warning(e.getMessage());
+
+        }
+
+    }
+
+    private void pesquisarPorTitulo() {
+
+        System.out.print(mensagem.get("menu.pesquisa.prompt.titulo") + " ");
+        String termo = AuxiliarDeConsole.lerLinha();
+
+        try {
+
+            Map<Orientacao, Map<Idioma, String>> resultados = orientacaoService.pesquisarOrientacaoPorTitulo(termo);
+            visualizarResultadosPesquisa(resultados);
+
+        } catch (DadosIncompletosException e) {
+
+            LOGGER.warning(e.getMessage());
+
+        }
+    }
+
+    private void visualizarResultadosPesquisa(Map<Orientacao, Map<Idioma, String>> resultados) {
+
+        List<Orientacao> lista = new ArrayList<>(resultados.keySet());
+        boolean loop = true;
+
+        while (loop) {
+
+            AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(
+                            mensagem.get("menu.pesquisa.resultado.sucesso"), LARGURA_MENU));
+
+            for (int i = 0; i < lista.size(); i++) {
+
+                Orientacao o = lista.get(i);
+                System.out.printf("%d - %s%n", i + 1, o.getCodigo());
+                resultados.get(o)
+                        .forEach((idioma, titulo) -> System.out.println("    [" + idioma.getNome() + "] " + titulo));
+
+            }
+
+            System.out.println("0 - " + mensagem.get("menu.pesquisa.opcao.voltar"));
+            System.out.print(mensagem.get("menu.pesquisa.resultado.selecionar") + " ");
+            String escolha = AuxiliarDeConsole.lerLinha();
+
+            if ("0".equals(escolha))
+                return;
+            try {
+
+                int idx = Integer.parseInt(escolha);
+                if (idx >= 1 && idx <= lista.size()) {
+                    exibirDetalhesOrientacao(lista.get(idx - 1));
+                    System.out.println("1 - " + mensagem.get("menu.pesquisa.resultado.visualizar_outra"));
+                    System.out.println("0 - " + mensagem.get("menu.pesquisa.resultado.voltar"));
+                    String prox = AuxiliarDeConsole.lerLinha();
+
+                    if ("0".equals(prox)) {
+
+                        loop = false;
+
+                    }
+
+                } else {
+                    LOGGER.warning(mensagem.get("main.input.invalido"));
+                }
+            } catch (NumberFormatException ex) {
+
+                LOGGER.warning(mensagem.get("main.input.invalido"));
+
+            }
+        }
+    }
+
+    private void exibirDetalhesOrientacao(Orientacao o) {
+
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(
+                        mensagem.get("menu.pesquisa.resultado.orientacao") + ": " + o.getCodigo(), LARGURA_MENU));
+
+        System.out.println(mensagem.get("menu.orientacao.tipo") + ": " + o.getTipo().getNome()); // REVISAR
+        o.getTitulos().forEach((idioma, titulo) -> {
+
+            System.out.println("[" + idioma.getNome() + "]");
+            System.out.println(mensagem.getString("menu.pesquisa.resultado.titulo") + ": " + titulo);
+            System.out.println(mensagem.getString("menu.pesquisa.resultado.conteudo") + ": " + o.getConteudo(idioma));
+
+        });
+
+        AuxiliarDeConsole.separador();
 
     }
 
     public static void listarOrientacoes() {
 
-        orientacaoService.listarOrientacoes();
+        // orientacaoService.listarOrientacoes();
 
     }
 

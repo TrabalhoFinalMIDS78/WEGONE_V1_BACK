@@ -2,12 +2,14 @@ package br.com.wegone.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Collections;
 import java.util.Comparator;
+import java.text.Normalizer;
 
 import br.com.wegone.exception.DadosIncompletosException;
 import br.com.wegone.repository.*;
@@ -150,16 +152,11 @@ public class OrientacaoService {
 
                 return orientacaoPesquisa;
 
-            } else {
-
-                throw new DadosIncompletosException(
-                        mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + pesquisa);
-
             }
-
         }
 
-        return null;
+        throw new DadosIncompletosException(
+                mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + pesquisa);
 
     }
 
@@ -171,26 +168,46 @@ public class OrientacaoService {
 
         String termoLower = termoPesquisa.toLowerCase();
 
+        String termoNorm = normalize(termoLower);
+
         for (Orientacao orientacao : listaOrientacoes) {
             Map<Idioma, String> titulosEncontrados = new LinkedHashMap<>();
 
             for (Idioma idioma : idiomaService.getListaIdiomas()) {
+
                 String titulo = orientacao.getTitulo(idioma);
 
-                if (titulo != null && titulo.toLowerCase().contains(termoLower)) {
-                    titulosEncontrados.put(idioma, titulo);
+                if (titulo != null) {
+                    String tituloNorm = normalize(titulo);
+                    if (tituloNorm.contains(termoNorm)) {
+                        titulosEncontrados.put(idioma, titulo);
+                    }
+
                 }
+
             }
 
             if (!titulosEncontrados.isEmpty()) {
                 resultados.put(orientacao, titulosEncontrados);
-            } else {
-                throw new DadosIncompletosException(
-                        mensagem.get("exception.orientacao.pesquisa.termo_nao_encontrado") + " " + termoPesquisa);
             }
+
+        }
+
+        if (resultados.isEmpty()) {
+            throw new DadosIncompletosException(
+                    mensagem.get("exception.orientacao.pesquisa.termo_nao_encontrado") + " " + termoPesquisa);
         }
 
         return resultados;
+    }
+
+    private String normalize(String text) {
+
+        String n = Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "");
+
+        return n.toLowerCase(Locale.ROOT);
+
     }
 
     public static List<Orientacao> listarOrientacoes(
