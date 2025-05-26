@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.wegone.service.IdiomaService;
+
 public class TipoOrientacoesDisponiveis {
     
     private List<TipoOrientacao> ListaOrientacoesDisponiveis = new ArrayList<>();
 
-    public TipoOrientacoesDisponiveis(IdiomasDisponiveis idiomas) {
+    public TipoOrientacoesDisponiveis(IdiomaService idiomas) {
 
         // Criando as Orientações do Sistema WEGONE
 

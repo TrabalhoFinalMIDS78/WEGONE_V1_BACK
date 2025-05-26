@@ -19,6 +19,7 @@ import br.com.wegone.model.TipoOrientacoesDisponiveis;
 import br.com.wegone.model.Usuario;
 import br.com.wegone.exception.*;
 import br.com.wegone.model.Orientacao;
+import br.com.wegone.view.AuxiliarDeConsole;
 
 public class MenuService {
 
@@ -30,10 +31,9 @@ public class MenuService {
 
     private static OrientacaoService orientacaoService = new OrientacaoService();
     private static IdiomasDisponiveis idiomasDisponiveis = new IdiomasDisponiveis();
-    private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(
-            idiomasDisponiveis);
-    private static String idiomaAtualNome = IdiomaSelecionado.getIdiomaAtualNome();
     private static IdiomaService idiomaService = new IdiomaService();
+    private static TipoOrientacoesDisponiveis tipoOrientacoesDisponiveis = new TipoOrientacoesDisponiveis(idiomaService);
+    private static String idiomaAtualNome = IdiomaSelecionado.getIdiomaAtualNome();
 
     // Escolha
 
@@ -421,6 +421,7 @@ public class MenuService {
 
                             auxiliar.exibirTitulo(
                                     auxiliar.centralizarTexto(mensagem.get("menu.exibir.edicao.titulo"), LARGURA_MENU));
+
                             editarOrientacao();
                             opcaoSelecionadaComSucesso = true;
 
@@ -555,6 +556,8 @@ public class MenuService {
                 break;
             } catch (DadosIncompletosException e) {
                 LOGGER.warning(e.getMessage());
+
+                erroGenerico();
             }
         }
 
@@ -753,20 +756,133 @@ public class MenuService {
 
             erroGenerico();
 
-            return;
-
         } else {
+            erroGenerico();
+        }
+
+    }
+
+    // Método para Exluir Orientação
+    public static void excluirOrientacao() {
+
+        auxiliar.exibirTitulo(
+                auxiliar.centralizarTexto(mensagem.get("menu.exibir.exclusao.titulo"), LARGURA_MENU));
+
+        String codigo = null;
+
+        while (true) {
+            LOGGER.info(mensagem.get("menu.prompt.codigo") + ": ");
+            String entrada = AuxiliarDeConsole.lerLinha();
+            try {
+                ValidadorService.validarInputVazio(entrada);
+                codigo = entrada.trim();
+                break;
+            } catch (DadosIncompletosException e) {
+                LOGGER.warning(e.getMessage());
+                erroGenerico();
+        
+                return;
+            }
+
+        }
+
+        // 2. Buscar orientação existente
+
+        Orientacao orientacao = buscarPorCodigo(codigo);
+
+        if (orientacao == null) {
+
+            AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(
+                            mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + codigo,
+                            LARGURA_MENU));
 
             erroGenerico();
 
             return;
         }
 
+        // Validação da Orientação
+
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(
+                        mensagem.get("menu.orientacao.encontrada"),
+                        LARGURA_MENU));
+
+        LOGGER.info(mensagem.get("menu.orientacao.codigo") + ": " + orientacao.getCodigo());
+        LOGGER.info(mensagem.get("menu.orientacao.tipo") + ": "
+                + orientacao.getTipo().getNome(IdiomaSelecionado.getIdiomaAtualObjeto()));
+
+        LOGGER.info(mensagem.get("menu.orientacao.titulos") + ":"); // Mostra os títulos em cada Idioma
+        for (Idioma idioma : idiomaService.getListaIdiomas()) {
+            String titulo = orientacao.getTitulo(idioma);
+            LOGGER.info("  " + idioma.getNome() + ": " + (titulo != null ? titulo : "[vazio]"));
+        }
+
+        LOGGER.info(mensagem.get("menu.orientacao.conteudos") + ":"); // Mostra os conteúdos em cada Idioma
+        for (Idioma idioma : idiomaService.getListaIdiomas()) {
+            String conteudo = orientacao.getConteudo(idioma);
+            LOGGER.info("  " + idioma.getNome() + ": " + (conteudo != null ? conteudo : "[vazio]"));
+        }
+
+        LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+        LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(
+                mensagem.get("menu.prompt.confirmar"), LARGURA_MENU) + "║"); // 1- Confirmar
+        LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(
+                mensagem.get("menu.prompt.nao_confirmar"), LARGURA_MENU) + "║"); // 2- Incorreta
+        LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+
+        escolha();
+
+        String inputConfirmacaoEdicao = auxiliar.lerLinha();
+
+        try {
+
+            ValidadorService.validarInputVazio(inputConfirmacaoEdicao);
+
+        } catch (DadosIncompletosException e) {
+
+            LOGGER.warning(e.getMessage());
+
+            erroGenerico();
+
+            return;
+        }
+
+        if (inputConfirmacaoEdicao.equals("1")) {
+
+                AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(
+                        mensagem.get("menu.exclusao.confirmada.edicao"),
+                        LARGURA_MENU));
+
+            // 4. Chamar service para deletar
+            try {
+                orientacaoService.deletarOrientacao(codigo);
+                LOGGER.info(mensagem.get("exception.orientacao.exclusao.sucesso"));
+            } catch (DadosIncompletosException e) {
+                LOGGER.warning(e.getMessage());
+                erroGenerico();
+            }
+
+        } else if (inputConfirmacaoEdicao.equals("2")) {
+            
+            AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(
+                    mensagem.get("menu.orientacao.nao_confirmada.edicao"),
+                    LARGURA_MENU));
+
+            erroGenerico();
+
+        } else {
+            erroGenerico();
+        }
+
     }
 
-    public static void excluirOrientacao() {
+        
 
-        // orientacaoService.excluirOrientacao();
+        
 
     }
 

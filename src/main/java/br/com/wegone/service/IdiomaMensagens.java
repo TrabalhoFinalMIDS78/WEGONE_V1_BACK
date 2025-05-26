@@ -3,11 +3,14 @@ package br.com.wegone.service;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import br.com.wegone.core.IdiomaSelecionado;
 
 public class IdiomaMensagens {
 
+    private static final Logger LOGGER = Logger.getLogger(IdiomaMensagens.class.getName());
     private final ResourceBundle bundle;
     private static final String BASENAME = "i18n.menu";
 
@@ -20,24 +23,28 @@ public class IdiomaMensagens {
         ResourceBundle tmp;
 
         try {
-            Locale locale;
-            String[] partesCodigo = codigoAtual.split("_");
-
-            if (partesCodigo.length == 2) {
-                // Idioma com região (ex.: pt_BR)
-                locale = new Locale(partesCodigo[0], partesCodigo[1]);
-            } else {
-                // Idioma sem região (ex.: pt)
-                locale = new Locale(partesCodigo[0]);
-            }
-
+            Locale locale = determinarLocale(codigoAtual);
             tmp = ResourceBundle.getBundle(BASENAME, locale);
-
         } catch (MissingResourceException e) {
-            System.err.println("Aviso: não encontrei propriedades para idioma '" + codigoAtual + "'. Usando padrão pt_BR.");
+            LOGGER.log(Level.WARNING, "Aviso: não encontrei propriedades para idioma ''{0}''. Usando padrão pt_BR.", codigoAtual);
             tmp = ResourceBundle.getBundle(BASENAME, Locale.ROOT);
         }
         this.bundle = tmp;
+    }
+
+    /**
+     * Determina o Locale com base no código do idioma.
+     * 
+     * @param codigoAtual Código do idioma (ex.: "pt_BR" ou "pt")
+     * @return Locale correspondente
+     */
+    private Locale determinarLocale(String codigoAtual) {
+        String[] partesCodigo = codigoAtual.split("_");
+        return switch (partesCodigo.length) {
+            case 2 -> Locale.of(partesCodigo[0], partesCodigo[1]); // Idioma com região (ex.: pt_BR)
+            case 1 -> Locale.of(partesCodigo[0]); // Idioma sem região (ex.: pt)
+            default -> Locale.ROOT; // Fallback para o padrão
+        };
     }
 
     /**
