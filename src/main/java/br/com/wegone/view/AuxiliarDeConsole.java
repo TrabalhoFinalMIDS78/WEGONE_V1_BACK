@@ -1,13 +1,22 @@
 package br.com.wegone.view;
 
 import java.util.logging.Logger;
+import br.com.wegone.service.IdiomaMensagens;
 
 public class AuxiliarDeConsole {
+
+    private static final IdiomaMensagens mensagem = new IdiomaMensagens();
 
     private static final Logger LOGGER = Logger.getLogger(AuxiliarDeConsole.class.getName());
 
     public static String lerLinha() {
         return new java.util.Scanner(System.in).nextLine();
+    }
+
+    public static void escolha() {
+
+        LOGGER.info("\n" + mensagem.get("menu.escolha"));
+
     }
 
     public static void exibirTitulo(String titulo) {
