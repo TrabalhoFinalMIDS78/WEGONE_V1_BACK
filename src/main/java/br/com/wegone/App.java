@@ -17,24 +17,19 @@ import br.com.wegone.exception.DadosIncompletosException;
 import br.com.wegone.model.*;
 
 public class App {
-    public static void main(String[] args) {
-
-        MenuService menu = new MenuService();
-        OrientacaoService orientacao = new OrientacaoService();
-        IdiomaMensagens mensagem = new IdiomaMensagens();
-        UsuarioView menuUsuario = new UsuarioView();
-
-        AuxiliarDeConsole auxiliar = new AuxiliarDeConsole();
+    public static void main(String[] args) {;
 
         // Iniciar Sistema
 
-        menu.exibirLogo();
+        MenuService.exibirLogo();
 
-        menu.selecionarIdioma();
-
-        menuUsuario.selecionarMenuAcesso();
+        MenuService.selecionarIdioma();
 
         // Definir Usuário
+        UsuarioView.selecionarMenuAcesso();
+
+        // Iniciar Menu Principal
+        MenuService.selecionarMenuPrincipal();
 
     }
 

@@ -1,3 +1,7 @@
+/*
+ *  CLASSE ANTIGA, BETA ANTIGA DA MAIN
+ * 
+
 package br.com.wegone.view;
 
 import java.util.ArrayList;
@@ -825,3 +829,7 @@ public class SistemaOrientacoes {
         }
     }
 }
+
+/**
+ * Classe responsável pela exibição do sistema de orientações.
+ */

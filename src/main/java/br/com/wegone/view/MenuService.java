@@ -204,23 +204,23 @@ public class MenuService {
         while (!opcaoSelecionadaComSucesso) {
 
             LOGGER.info("\n╔══════════════════════════════════════════════════╗");
-            LOGGER.info("║" + AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.orientacoes.titulo"), LARGURA_MENU)
-                    + "║");
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.orientacoes.titulo"), LARGURA_MENU) + "║");
             LOGGER.info("╠══════════════════════════════════════════════════╣");
-            LOGGER.info(
-                    "║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.cadastrar"), LARGURA_MENU)
-                            + "║");
-            LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.editar"), LARGURA_MENU)
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.cadastrar"), LARGURA_MENU)
                     + "║");
-            LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.excluir"), LARGURA_MENU)
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.editar"), LARGURA_MENU) + "║");
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.excluir"), LARGURA_MENU) + "║");
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.pesquisar"), LARGURA_MENU)
                     + "║");
-            LOGGER.info(
-                    "║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.pesquisar"), LARGURA_MENU)
-                            + "║");
-            LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.listar"), LARGURA_MENU)
-                    + "║");
-            LOGGER.info(
-                    "║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.sair"), LARGURA_MENU) + "║");
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.listar"), LARGURA_MENU) + "║");
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.sair"), LARGURA_MENU) + "║");
             LOGGER.info("╚══════════════════════════════════════════════════╝\n");
 
             AuxiliarDeConsole.escolha(); // Mensagem de escolha de acesso

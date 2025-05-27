@@ -10,6 +10,19 @@
   <name>wegone</name>
   <url>http://maven.apache.org</url>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <mainClass>br.com.wegone.App</mainClass>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
@@ -22,11 +35,11 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
       <version>9.2.0</version>
-  </dependency>
+    </dependency>
   </dependencies>
 </project>
