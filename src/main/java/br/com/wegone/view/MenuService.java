@@ -135,7 +135,7 @@ public class MenuService {
                 if (escolhaInt < 1 || escolhaInt > 5) {
 
                     LOGGER.warning("\n╔══════════════════════════════════════════════════╗");
-                    LOGGER.warning("║             Error! Invalid Language              ║");
+                    LOGGER.warning("║             ❌ Error! Invalid Language          ║");
                     LOGGER.warning("╠══════════════════════════════════════════════════╣");
                     LOGGER.warning("║ 1 - Try Again                                    ║");
                     LOGGER.warning("║ 2 - Start with Brazilian Portuguese              ║");
@@ -148,7 +148,6 @@ public class MenuService {
                     switch (escolhaErroIdioma) {
                         case "1":
                             // Tentar novamente
-                            selecionarIdioma();
                             break;
                         case "2":
                             // Iniciar com Português
@@ -267,7 +266,7 @@ public class MenuService {
                             sairSistema(); // Sair do sistema
                             break;
                         default:
-                            LOGGER.warning(mensagem.get("main.input.invalido"));
+                            LOGGER.warning(mensagem.get("main.opcao.invalidao"));
                             break;
                     }
 
