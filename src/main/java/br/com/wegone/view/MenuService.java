@@ -50,8 +50,7 @@ public class MenuService {
             LOGGER.info("║" + auxiliar.centralizarTexto(mensagem.get("menu.erro.generico.titulo"), LARGURA_MENU) + "║");
             LOGGER.info("╠══════════════════════════════════════════════════╣");
             LOGGER.info(
-                    "║" + auxiliar.alinharEsquerda(mensagem.get("menu.erro.generico.tentar.novamente"), LARGURA_MENU)
-                            + "║");
+                    "║" + auxiliar.alinharEsquerda(mensagem.get("menu.erro.generico.tentar.novamente"), LARGURA_MENU) + "║");
             LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.erro.generico.sair"), LARGURA_MENU) + "║");
             LOGGER.info("╚══════════════════════════════════════════════════╝\n");
 
@@ -188,7 +187,7 @@ public class MenuService {
 
             } catch (DadosIncompletosException e) {
 
-                LOGGER.severe("Error: " + e.getMessage());
+                LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
 
             }
 
@@ -286,6 +285,7 @@ public class MenuService {
                                     auxiliar.centralizarTexto(mensagem.get("menu.exibir.edicao.titulo"), LARGURA_MENU));
 
                             editarOrientacao();
+
                             opcaoSelecionadaComSucesso = true;
 
                             break;
@@ -294,7 +294,9 @@ public class MenuService {
 
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.exibir.exclusao.titulo"),
                                     LARGURA_MENU));
+
                             excluirOrientacao();
+
                             opcaoSelecionadaComSucesso = true;
 
                             break;
@@ -303,7 +305,9 @@ public class MenuService {
 
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.exibir.pesquisa.titulo"),
                                     LARGURA_MENU));
+
                             pesquisarOrientacao();
+
                             opcaoSelecionadaComSucesso = true;
 
                             break;
@@ -312,7 +316,9 @@ public class MenuService {
 
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(mensagem.get("menu.exibir.listagem.titulo"),
                                     LARGURA_MENU));
+
                             listarOrientacoes();
+
                             opcaoSelecionadaComSucesso = true;
 
                             break;
@@ -321,7 +327,9 @@ public class MenuService {
 
                             auxiliar.exibirTitulo(auxiliar
                                     .centralizarTexto(mensagem.get("menu.exibir.trocar.idioma.titulo"), LARGURA_MENU));
+
                             selecionarIdioma();
+
                             opcaoSelecionadaComSucesso = true;
 
                             break;
@@ -339,7 +347,7 @@ public class MenuService {
 
             } catch (DadosIncompletosException e) {
 
-                LOGGER.severe("Error: " + e.getMessage());
+                LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
 
             } finally {
 
@@ -563,7 +571,7 @@ public class MenuService {
 
         } catch (DadosIncompletosException e) {
 
-            LOGGER.warning(e.getMessage());
+            LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
 
             erroGenerico();
 
@@ -601,10 +609,13 @@ public class MenuService {
 
             // 4. Chamar service para editar
             try {
+
                 OrientacaoService.editarOrientacao(codigo, novosTitulos, novosConteudos);
                 LOGGER.info(mensagem.get("exception.orientacao.edicao.sucesso"));
+
             } catch (DadosIncompletosException e) {
-                LOGGER.warning(e.getMessage());
+
+                LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
                 erroGenerico();
             }
 
@@ -641,7 +652,9 @@ public class MenuService {
                 codigo = entrada.trim();
                 break;
             } catch (DadosIncompletosException e) {
-                LOGGER.warning(e.getMessage());
+
+                LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
+
                 erroGenerico();
         
                 return;
@@ -721,11 +734,15 @@ public class MenuService {
 
             // 4. Chamar service para deletar
             try {
+
                 orientacaoService.deletarOrientacao(codigo);
                 LOGGER.info(mensagem.get("exception.orientacao.exclusao.sucesso"));
+
             } catch (DadosIncompletosException e) {
-                LOGGER.warning(e.getMessage());
+
+                LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
                 erroGenerico();
+
             }
 
         } else if (inputConfirmacaoEdicao.equals("2")) {
@@ -743,23 +760,18 @@ public class MenuService {
 
     }
 
-        
-
-        
-
-    }
-
     // Métodos de Pesquisa
 
     public void pesquisarOrientacao() {
         while (true) {
-            AuxiliarDeConsole.exibirTitulo(
-                    AuxiliarDeConsole.centralizarTexto(
-                            mensagem.get("menu.pesquisa.titulo"), LARGURA_MENU));
 
-            System.out.println(mensagem.get("menu.pesquisa.opcao.codigo")); // Criar Menu
-            System.out.println(mensagem.get("menu.pesquisa.opcao.titulo"));
-            System.out.println(mensagem.get("menu.pesquisa.opcao.voltar"));
+            LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+            LOGGER.info("║" + auxiliar.centralizarTexto(mensagem.get("menu.pesquisa.titulo"), LARGURA_MENU) + "║");
+            LOGGER.info("╠══════════════════════════════════════════════════╣");
+            LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.opcao.codigo"), LARGURA_MENU) + "║");
+            LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.opcao.titulo"), LARGURA_MENU) + "║");
+            LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+
             System.out.print(mensagem.get("menu.pesquisa.prompt.opcao") + " ");
 
             String opcao = AuxiliarDeConsole.lerLinha();
@@ -771,18 +783,18 @@ public class MenuService {
                 case "2":
                     pesquisarPorTitulo();
                     break;
-                case "0":
-                    return;
                 default:
                     LOGGER.warning(mensagem.get("main.input.invalido"));
             }
+
             AuxiliarDeConsole.separador();
+
         }
     }
 
     private void pesquisarPorCodigo() {
 
-        System.out.print(mensagem.get("menu.pesquisa.prompt.codigo") + " ");
+        LOGGER.info(mensagem.get("menu.pesquisa.prompt.codigo") + " ");
         String codigo = AuxiliarDeConsole.lerLinha();
 
         try {
@@ -792,7 +804,7 @@ public class MenuService {
 
         } catch (DadosIncompletosException e) {
 
-            LOGGER.warning(e.getMessage());
+            LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
 
         }
 
@@ -810,7 +822,7 @@ public class MenuService {
 
         } catch (DadosIncompletosException e) {
 
-            LOGGER.warning(e.getMessage());
+            LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
 
         }
     }
@@ -835,20 +847,38 @@ public class MenuService {
 
             }
 
-            System.out.println("0 - " + mensagem.get("menu.pesquisa.opcao.voltar"));
-            System.out.print(mensagem.get("menu.pesquisa.resultado.selecionar") + " ");
+            LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+            LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.resultado.selecionar"), LARGURA_MENU) + "║");
+            LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.opcao.voltar"), LARGURA_MENU) + "║");
+            LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+
             String escolha = AuxiliarDeConsole.lerLinha();
 
-            if ("0".equals(escolha))
+            if ("0".equals(escolha)) {
+
                 return;
+
+            }
+                
             try {
 
                 int idx = Integer.parseInt(escolha);
                 if (idx >= 1 && idx <= lista.size()) {
+
                     exibirDetalhesOrientacao(lista.get(idx - 1));
-                    System.out.println("1 - " + mensagem.get("menu.pesquisa.resultado.visualizar_outra"));
-                    System.out.println("0 - " + mensagem.get("menu.pesquisa.resultado.voltar"));
+
+                    LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+                    LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.resultado.visualizar_outra"), LARGURA_MENU) + "║");
+                    LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.resultado.voltar"), LARGURA_MENU) + "║");
+                    LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+
                     String prox = AuxiliarDeConsole.lerLinha();
+
+                    if ("1".equals(prox)) {
+
+                        visualizarResultadosPesquisa(resultados);
+
+                    }
 
                     if ("0".equals(prox)) {
 
@@ -861,7 +891,7 @@ public class MenuService {
                 }
             } catch (NumberFormatException ex) {
 
-                LOGGER.warning(mensagem.get("main.input.invalido"));
+                LOGGER.severe(mensagem.get("menu.erro") + ex.getMessage());
 
             }
         }
@@ -869,22 +899,19 @@ public class MenuService {
 
     private void exibirDetalhesOrientacao(Orientacao o) {
 
-        AuxiliarDeConsole.exibirTitulo(
-                AuxiliarDeConsole.centralizarTexto(
-                        mensagem.get("menu.pesquisa.resultado.orientacao") + ": " + o.getCodigo(), LARGURA_MENU));
+        String titulo = o.getTitulo(IdiomaSelecionado.getIdiomaAtualObjeto());
 
-        System.out.println(mensagem.get("menu.orientacao.tipo") + ": " + o.getTipo().getNome()); // REVISAR
-        o.getTitulos().forEach((idioma, titulo) -> {
-
-            System.out.println("[" + idioma.getNome() + "]");
-            System.out.println(mensagem.getString("menu.pesquisa.resultado.titulo") + ": " + titulo);
-            System.out.println(mensagem.getString("menu.pesquisa.resultado.conteudo") + ": " + o.getConteudo(idioma));
-
-        });
+        LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+        LOGGER.info("║" + AuxiliarDeConsole.centralizarTexto(
+                        mensagem.get("menu.pesquisa.resultado.orientacao") + ": " + o.getCodigo() + "║" + mensagem.get("menu.titulo") + ": " + titulo, LARGURA_MENU) + "║");
+        LOGGER.info("╠══════════════════════════════════════════════════╣");
+        LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + o.getTipo().getNome(IdiomaSelecionado.getIdiomaAtualObjeto()), LARGURA_MENU) + "║");
+        LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.pesquisa.conteudo") + ": " + o.getConteudo(IdiomaSelecionado.getIdiomaAtualObjeto()), LARGURA_MENU) + "║"); // Revisar para fazer funcionar (vai furar o limite)
+        LOGGER.info("╚══════════════════════════════════════════════════╝\n");
 
         AuxiliarDeConsole.separador();
 
-    }
+        }
 
     public static void listarOrientacoes() {
 

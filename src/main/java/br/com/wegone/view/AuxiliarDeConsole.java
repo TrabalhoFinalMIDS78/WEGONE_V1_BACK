@@ -54,7 +54,7 @@ public class AuxiliarDeConsole {
      */
     public static String centralizarTexto(String texto, int largura) {
         if (texto == null || texto.isEmpty()) {
-            return " ".repeat(largura);
+            return repeat(' ' , largura);
         }
 
         int tamanhoTexto = texto.length();
@@ -66,14 +66,14 @@ public class AuxiliarDeConsole {
         int espacosEsquerda = espacosTotais / 2;
         int espacosDireita = espacosTotais - espacosEsquerda;
 
-        return " ".repeat(espacosEsquerda) + texto + " ".repeat(espacosDireita);
+        return repeat(' ' ,espacosEsquerda) + texto + repeat(' ', espacosDireita);
     }
 
     // Método para alinhar texto à esquerda
     public static String alinharEsquerda(String texto, int largura) {
 
         if (texto == null || texto.isEmpty()) {
-            return " ".repeat(largura);
+            return repeat(' ', largura);
         }
 
         int tamanhoTexto = texto.length();
@@ -81,7 +81,7 @@ public class AuxiliarDeConsole {
             return texto.substring(0, largura); // Trunca o texto se for maior que a largura
         }
 
-        return texto + " ".repeat(Math.max(0, largura - texto.length()));
+        return texto + repeat(' ' ,Math.max(0, largura - texto.length()));
     }
 
 }

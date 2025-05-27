@@ -18,6 +18,7 @@ public class UsuarioView {
     private static final Logger LOGGER = Logger.getLogger(UsuarioView.class.getName());
     private static IdiomaMensagens mensagem = new IdiomaMensagens();
     private static final AuxiliarDeConsole auxiliar = new AuxiliarDeConsole();
+    private static final UsuarioService usuarioService = new UsuarioService();
     private static final int LARGURA_MENU = 50;
 
     public static void sairSistema() {
@@ -75,20 +76,20 @@ public class UsuarioView {
 
                 if (escolhaInt < 0 || escolhaInt > 2) {
 
-                    LOGGER.warning("\n╔══════════════════════════════════════════════════╗");
-                    LOGGER.warning("║             Error! Invalid Access               ║");
-                    LOGGER.warning("╠══════════════════════════════════════════════════╣");
-                    LOGGER.warning("║ 1 - Try Again                                    ║");
-                    LOGGER.warning("║ 0 - Exit                                         ║");
-                    LOGGER.warning("╚══════════════════════════════════════════════════╝\n");
+                    LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+                    LOGGER.info("║" + auxiliar.centralizarTexto(mensagem.get("menu.erro.generico.titulo"), LARGURA_MENU) + "║");
+                    LOGGER.info("╠══════════════════════════════════════════════════╣");
+                    LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.erro.generico.tentar.novamente"), LARGURA_MENU) + "║");
+                    LOGGER.info("║" + auxiliar.alinharEsquerda(mensagem.get("menu.erro.generico.sair"), LARGURA_MENU) + "║");
+                    LOGGER.info("╚══════════════════════════════════════════════════╝\n");
 
-                    LOGGER.info("\nChoose: ");
+                    auxiliar.escolha();
+
                     String escolhaErroMenuPrincipal = AuxiliarDeConsole.lerLinha(); // Ler escolha do usuário
 
                     switch (escolhaErroMenuPrincipal) {
                         case "1":
                             // Tentar novamente
-                            selecionarMenuAcesso();
                             break;
                         case "0":
                             sairSistema(); // Sair do sistema
@@ -111,7 +112,7 @@ public class UsuarioView {
                             String matricula = AuxiliarDeConsole.lerLinha();
                             LOGGER.info("\n" + mensagem.get("menu.acesso.login.senha"));
                             String senha = AuxiliarDeConsole.lerLinha();
-                            Usuario usuario = usuarioService.login(matricula, senha);
+                            Usuario usuario = usuarioService.login(matricula, senha); // Falta a criação
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(
                                     String.format(mensagem.get("exception.user.login_success"), usuario.getNome()),
                                     LARGURA_MENU));
@@ -131,7 +132,7 @@ public class UsuarioView {
                             String email = AuxiliarDeConsole.lerLinha();
                             LOGGER.info(mensagem.get("menu.acesso.cadastro.senha"));
                             String senhaCadastro = AuxiliarDeConsole.lerLinha();
-                            Usuario novoUsuario = usuarioService.cadastrar(mat, nome, email, senhaCadastro);
+                            Usuario novoUsuario = usuarioService.cadastrar(mat, nome, email, senhaCadastro); // Falta a criação
                             auxiliar.exibirTitulo(auxiliar.centralizarTexto(
                                     String.format(mensagem.get("exception.user.register_success"),
                                             novoUsuario.getNome()),
@@ -155,11 +156,11 @@ public class UsuarioView {
 
             } catch (DadosIncompletosException e) {
 
-                LOGGER.severe("Error: " + e.getMessage());
+                LOGGER.severe(mensagem.get("menu.erro") + e.getMessage());
 
             }
+            
         }
     }
-
 
 }

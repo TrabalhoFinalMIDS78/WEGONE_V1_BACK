@@ -22,6 +22,7 @@ public class App {
         MenuService menu = new MenuService();
         OrientacaoService orientacao = new OrientacaoService();
         IdiomaMensagens mensagem = new IdiomaMensagens();
+        UsuarioView menuUsuario = new UsuarioView();
 
         AuxiliarDeConsole auxiliar = new AuxiliarDeConsole();
 
@@ -31,7 +32,7 @@ public class App {
 
         menu.selecionarIdioma();
 
-        menu.selecionarMenuAcesso();
+        menuUsuario.selecionarMenuAcesso();
 
         // Definir Usuário
 
