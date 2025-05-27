@@ -142,7 +142,7 @@ public class OrientacaoService {
 
     }
 
-    public Orientacao pesquisarOrientacaoPorCodigo(String pesquisa) {
+    public static Orientacao pesquisarOrientacaoPorCodigo(String pesquisa) {
 
         ValidadorService.validarInputVazio(pesquisa);
 
@@ -160,7 +160,7 @@ public class OrientacaoService {
 
     }
 
-    public Map<Orientacao, Map<Idioma, String>> pesquisarOrientacaoPorTitulo(String termoPesquisa) {
+    public static Map<Orientacao, Map<Idioma, String>> pesquisarOrientacaoPorTitulo(String termoPesquisa) {
 
         ValidadorService.validarInputVazio(termoPesquisa);
 
@@ -201,7 +201,7 @@ public class OrientacaoService {
         return resultados;
     }
 
-    private String normalize(String text) {
+    private static String normalize(String text) {
 
         String n = Normalizer.normalize(text, Normalizer.Form.NFD)
                 .replaceAll("[^\\p{ASCII}]", "");

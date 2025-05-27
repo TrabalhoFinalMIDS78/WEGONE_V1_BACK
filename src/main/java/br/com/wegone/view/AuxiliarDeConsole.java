@@ -1,21 +1,30 @@
 package br.com.wegone.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import br.com.wegone.service.IdiomaMensagens;
 
 public class AuxiliarDeConsole {
 
     private static final IdiomaMensagens mensagem = new IdiomaMensagens();
-
     private static final Logger LOGGER = Logger.getLogger(AuxiliarDeConsole.class.getName());
+    private static final java.util.Scanner SCANNER = new java.util.Scanner(System.in);
+
+    // Private constructor to prevent instantiation
+    AuxiliarDeConsole() {
+        throw new UnsupportedOperationException("Utility class"); // Fiz para evitar instância
+    }
 
     public static String lerLinha() {
-        return new java.util.Scanner(System.in).nextLine();
+        return SCANNER.nextLine();
     }
 
     public static void escolha() {
 
-        LOGGER.info("\n" + mensagem.get("menu.escolha"));
+        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+            LOGGER.info(() -> "\n" + mensagem.get("menu.escolha"));
+        }
 
     }
 
@@ -25,9 +34,11 @@ public class AuxiliarDeConsole {
         String borda = repeat('═', largura);
         String linhaCentral = String.format("║%-50s║", "  " + titulo);
 
-        LOGGER.info("\n╔" + borda + "╗");
-        LOGGER.info(linhaCentral);
-        LOGGER.info("╚" + borda + "╝\n");
+        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+            LOGGER.info(String.format("%n╔%s╗", borda));
+            LOGGER.info(linhaCentral);
+            LOGGER.info(String.format("╚%s╝%n", borda));
+        }
 
     }
 
@@ -41,20 +52,52 @@ public class AuxiliarDeConsole {
 
     public static void separador() {
 
-        LOGGER.info("\n" + repeat('═', 52));
+        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+            LOGGER.info(String.format("%n%s", repeat('═', 52)));
+        }
+
+    }
+
+    public static List<String> quebrarEmLinhas(String texto, int largura) {
+
+        List<String> linhas = new ArrayList<>();
+        if (texto == null || texto.isEmpty()) {
+            linhas.add("");
+            return linhas;
+        }
+
+        String[] palavras = texto.split(" ");
+        StringBuilder linhaAtual = new StringBuilder();
+
+        for (String palavra : palavras) {
+            if (linhaAtual.length() + palavra.length() + 1 > largura) {
+                linhas.add(linhaAtual.toString());
+                linhaAtual = new StringBuilder();
+            }
+            if (linhaAtual.length() > 0) {
+                linhaAtual.append(" ");
+            }
+            linhaAtual.append(palavra);
+        }
+
+        if (linhaAtual.length() > 0) {
+            linhas.add(linhaAtual.toString());
+        }
+
+        return linhas;
 
     }
 
     /**
      * Centraliza um texto dentro de uma largura fixa.
      *
-     * @param texto Texto a ser centralizado.
+     * @param texto   Texto a ser centralizado.
      * @param largura Largura total do espaço onde o texto será centralizado.
      * @return Texto formatado com espaços para centralização.
      */
     public static String centralizarTexto(String texto, int largura) {
         if (texto == null || texto.isEmpty()) {
-            return repeat(' ' , largura);
+            return repeat(' ', largura);
         }
 
         int tamanhoTexto = texto.length();
@@ -66,7 +109,7 @@ public class AuxiliarDeConsole {
         int espacosEsquerda = espacosTotais / 2;
         int espacosDireita = espacosTotais - espacosEsquerda;
 
-        return repeat(' ' ,espacosEsquerda) + texto + repeat(' ', espacosDireita);
+        return repeat(' ', espacosEsquerda) + texto + repeat(' ', espacosDireita);
     }
 
     // Método para alinhar texto à esquerda
@@ -81,7 +124,7 @@ public class AuxiliarDeConsole {
             return texto.substring(0, largura); // Trunca o texto se for maior que a largura
         }
 
-        return texto + repeat(' ' ,Math.max(0, largura - texto.length()));
+        return texto + repeat(' ', Math.max(0, largura - texto.length()));
     }
 
 }
