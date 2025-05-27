@@ -52,6 +52,34 @@ public class UsuarioView {
 
     }
 
+    private static int erroAcesso() {
+
+        LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+        LOGGER.info(
+                "║" + AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.erro.titulo"), LARGURA_MENU)
+                        + "║");
+        LOGGER.info("╠══════════════════════════════════════════════════╣");
+        LOGGER.info(
+                "║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.erro.generico.tentar.novamente"),
+                        LARGURA_MENU) + "║");
+        LOGGER.info("║" + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.erro.generico.sair"), LARGURA_MENU)
+                + "║");
+        LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+    
+        LOGGER.info(mensagem.get("menu.erro.generico.escolha")); // Ex: "Escolha uma opção: "
+        String escolha = AuxiliarDeConsole.lerLinha();
+    
+        switch (escolha) {
+            case "1":
+                return 1; // Tentar novamente
+            case "0":
+                return 0; // Sair do sistema
+            default:
+                LOGGER.warning(mensagem.get("main.input.invalido"));
+                return erroAcesso(); // Rechama o método até o usuário digitar uma opção válida
+        }
+    }
+
     // Menu de Acesso do Sistema (Login e Cadastro)
 
     public static void selecionarMenuAcesso() {
@@ -117,14 +145,44 @@ public class UsuarioView {
                                     AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.login.titulo"),
                                             LARGURA_MENU));
 
-                            LOGGER.info("\n" + mensagem.get("menu.acesso.login.matricula"));
-                            String matricula = AuxiliarDeConsole.lerLinha();
-                            LOGGER.info("\n" + mensagem.get("menu.acesso.login.senha"));
-                            String senha = AuxiliarDeConsole.lerLinha();
-                            Usuario usuario = usuarioService.login(matricula, senha); // Falta a criação
-                            AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole.centralizarTexto(
+                            boolean loginRealizadoComSucesso = false;
+
+                            while (!loginRealizadoComSucesso) {
+                                
+                                LOGGER.info("\n" + mensagem.get("menu.acesso.login.matricula"));
+                                String matricula = AuxiliarDeConsole.lerLinha();
+
+                                LOGGER.info("\n" + mensagem.get("menu.acesso.login.senha"));
+                                String senha = AuxiliarDeConsole.lerLinha();
+                            
+                                Usuario usuario = null;
+
+                                try {
+                                
+                                    usuario = usuarioService.login(matricula, senha);
+
+                                    AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole.centralizarTexto(
                                     String.format(mensagem.get("exception.user.login_success"), usuario.getNome()),
                                     LARGURA_MENU));
+
+                                    loginRealizadoComSucesso = true;
+                                    opcaoSelecionadaComSucesso = true;
+
+                                } catch (DadosIncompletosException e) {
+                                
+                                    LOGGER.severe(e.getMessage());
+
+                                    int escolhaErro = erroAcesso();
+
+                                    if (escolhaErro == 0) {
+
+                                        sairSistema();
+
+                                    }
+
+                                }
+
+                            }
 
                             break;
 
@@ -142,12 +200,27 @@ public class UsuarioView {
                             String email = AuxiliarDeConsole.lerLinha();
                             LOGGER.info(mensagem.get("menu.acesso.cadastro.senha"));
                             String senhaCadastro = AuxiliarDeConsole.lerLinha();
-                            Usuario novoUsuario = usuarioService.cadastrar(mat, nome, email, senhaCadastro); // Falta a
-                                                                                                             // criação
+
+                            Usuario novoUsuario = null;
+
+                            try {
+                                
+                                novoUsuario = usuarioService.cadastrar(mat, nome, email, senhaCadastro);
+
+                            } catch (DadosIncompletosException e) {
+                                
+                                LOGGER.severe(e.getMessage());
+
+                                erroAcesso();
+
+                            }
+                                                                                                             
                             AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole.centralizarTexto(
                                     String.format(mensagem.get("exception.user.register_success"),
                                             novoUsuario.getNome()),
                                     LARGURA_MENU));
+
+                            opcaoSelecionadaComSucesso = true;
 
                             break;
 

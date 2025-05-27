@@ -57,7 +57,7 @@ public class MenuService {
                     + "║");
             LOGGER.info("╚══════════════════════════════════════════════════╝\n");
 
-            LOGGER.info(mensagem.get("menu.erro.generico.escolha")); // Ex: "Escolha uma opção: "
+            LOGGER.info(mensagem.get("menu.escolha")); // Ex: "Escolha uma opção: "
             String escolha = AuxiliarDeConsole.lerLinha();
 
             switch (escolha) {
@@ -205,22 +205,24 @@ public class MenuService {
 
             LOGGER.info("\n╔══════════════════════════════════════════════════╗");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.orientacoes.titulo"), LARGURA_MENU) + "║");
+                    + AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.principal.titulo"), LARGURA_MENU) + "║");
             LOGGER.info("╠══════════════════════════════════════════════════╣");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.cadastrar"), LARGURA_MENU)
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.cadastrar"), LARGURA_MENU)
                     + "║");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.editar"), LARGURA_MENU) + "║");
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.editar"), LARGURA_MENU) + "║");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.excluir"), LARGURA_MENU) + "║");
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.excluir"), LARGURA_MENU) + "║");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.pesquisar"), LARGURA_MENU)
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.pesquisar"), LARGURA_MENU)
                     + "║");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.listar"), LARGURA_MENU) + "║");
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.listar"), LARGURA_MENU) + "║");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.orientacoes.sair"), LARGURA_MENU) + "║");
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.trocar.idioma"), LARGURA_MENU) + "║");
+            LOGGER.info(() -> "║"
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.sair"), LARGURA_MENU) + "║");
             LOGGER.info("╚══════════════════════════════════════════════════╝\n");
 
             AuxiliarDeConsole.escolha(); // Mensagem de escolha de acesso
@@ -231,7 +233,7 @@ public class MenuService {
             try {
                 escolhaInt = Integer.parseInt(escolha); // Converter escolha para inteiro
             } catch (NumberFormatException nfe) {
-                LOGGER.warning(mensagem.get("main.input.invalido.numero"));
+                LOGGER.warning(mensagem.get("main.opcao.invalida"));
                 continue;
             }
 
@@ -241,7 +243,7 @@ public class MenuService {
 
                 ValidadorService.validarInputVazio(escolha); // Validar se a escolha não está vazia
 
-                if (escolhaInt < 0 || escolhaInt > 5) {
+                if (escolhaInt < 0 || escolhaInt > 6) {
 
                     LOGGER.info("\n╔══════════════════════════════════════════════════╗");
                     LOGGER.info("║" + AuxiliarDeConsole.centralizarTexto(
@@ -275,19 +277,12 @@ public class MenuService {
 
                         case "1":
 
-                            AuxiliarDeConsole.exibirTitulo(
-                                    AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.cadastro.titulo"),
-                                            LARGURA_MENU));
                             cadastrarOrientacao();
                             opcaoSelecionadaComSucesso = true;
 
                             break;
 
                         case "2":
-
-                            AuxiliarDeConsole.exibirTitulo(
-                                    AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.edicao.titulo"),
-                                            LARGURA_MENU));
 
                             editarOrientacao();
 
@@ -297,10 +292,6 @@ public class MenuService {
 
                         case "3":
 
-                            AuxiliarDeConsole.exibirTitulo(
-                                    AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.exclusao.titulo"),
-                                            LARGURA_MENU));
-
                             excluirOrientacao();
 
                             opcaoSelecionadaComSucesso = true;
@@ -308,10 +299,6 @@ public class MenuService {
                             break;
 
                         case "4":
-
-                            AuxiliarDeConsole.exibirTitulo(
-                                    AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.pesquisa.titulo"),
-                                            LARGURA_MENU));
 
                             pesquisarOrientacao();
 
@@ -321,10 +308,6 @@ public class MenuService {
 
                         case "5":
 
-                            AuxiliarDeConsole.exibirTitulo(
-                                    AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.listagem.titulo"),
-                                            LARGURA_MENU));
-
                             listarOrientacoes();
 
                             opcaoSelecionadaComSucesso = true;
@@ -332,9 +315,6 @@ public class MenuService {
                             break;
 
                         case "6":
-
-                            AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole
-                                    .centralizarTexto(mensagem.get("menu.exibir.trocar.idioma.titulo"), LARGURA_MENU));
 
                             selecionarIdioma();
 
