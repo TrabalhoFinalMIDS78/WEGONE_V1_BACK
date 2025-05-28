@@ -1,15 +1,20 @@
 package br.com.wegone.view;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Logger;
+
 import br.com.wegone.service.IdiomaMensagens;
 
 public class AuxiliarDeConsole {
 
     private static final IdiomaMensagens mensagem = new IdiomaMensagens();
     private static final Logger LOGGER = Logger.getLogger(AuxiliarDeConsole.class.getName());
-    private static final java.util.Scanner SCANNER = new java.util.Scanner(System.in);
+    private static final Scanner SCANNER = new Scanner(System.in, StandardCharsets.UTF_8.name());
+
+   
 
     // Private constructor to prevent instantiation
     AuxiliarDeConsole() {

@@ -1,20 +1,16 @@
 package br.com.wegone.service;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Collections;
-import java.util.Comparator;
-import java.text.Normalizer;
 
 import br.com.wegone.exception.DadosIncompletosException;
-import br.com.wegone.repository.*;
-import br.com.wegone.model.*;
-import br.com.wegone.service.*;
+import br.com.wegone.model.Idioma;
+import br.com.wegone.model.Orientacao;
+import br.com.wegone.model.TipoOrientacao;
 
 public class OrientacaoService {
 
@@ -210,12 +206,13 @@ public class OrientacaoService {
 
     }
 
-    public static List<Orientacao> listarOrientacoes(
+    public static List<Orientacao> listarOrientacoes() {
 
-            TipoOrientacao tipoOrientacaoFiltro,
-            boolean ordenarPorMaisRecente
+        return new ArrayList<>(listaOrientacoes);
 
-    ) {
+    }
+
+    public static List<Orientacao> listarOrientacoesPorTipo(TipoOrientacao tipoOrientacaoFiltro) {
 
         List<Orientacao> listaFiltrada = new ArrayList<>();
 
@@ -227,30 +224,6 @@ public class OrientacaoService {
 
             }
 
-        }
-
-        // Se true ele busca as mais recentes primeiro
-        // Se false ele busca as mais antigas primeiro
-        if (ordenarPorMaisRecente) {
-
-            Collections.sort(listaFiltrada, new Comparator<Orientacao>() {
-
-                public int compare(Orientacao o1, Orientacao o2) {
-
-                    return o2.getDataCriacao().compareTo(o1.getDataCriacao());
-
-                }
-            });
-
-        } else {
-            Collections.sort(listaFiltrada, new Comparator<Orientacao>() {
-
-                public int compare(Orientacao o1, Orientacao o2) {
-
-                    return o1.getDataCriacao().compareTo(o2.getDataCriacao());
-
-                }
-            });
         }
 
         return listaFiltrada;

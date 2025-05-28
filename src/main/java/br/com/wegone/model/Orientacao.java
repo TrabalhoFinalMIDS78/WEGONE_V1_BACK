@@ -1,8 +1,8 @@
 package br.com.wegone.model;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.time.LocalDateTime;
 
 public class Orientacao {
     

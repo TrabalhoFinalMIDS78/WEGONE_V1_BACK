@@ -4,21 +4,18 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import br.com.wegone.core.IdiomaSelecionado;
+import br.com.wegone.exception.DadosIncompletosException;
+import br.com.wegone.model.Idioma;
+import br.com.wegone.model.Orientacao;
+import br.com.wegone.model.TipoOrientacao;
+import br.com.wegone.model.TipoOrientacoesDisponiveis;
 import br.com.wegone.service.IdiomaMensagens;
 import br.com.wegone.service.IdiomaService;
 import br.com.wegone.service.OrientacaoService;
 import br.com.wegone.service.ValidadorService;
-import br.com.wegone.core.*;
-import br.com.wegone.model.Idioma;
-import br.com.wegone.model.TipoOrientacao;
-import br.com.wegone.model.TipoOrientacoesDisponiveis;
-import br.com.wegone.model.Usuario;
-import br.com.wegone.exception.*;
-import br.com.wegone.model.Orientacao;
-import br.com.wegone.view.AuxiliarDeConsole;
 
 public class MenuService {
 
@@ -135,7 +132,7 @@ public class MenuService {
                 if (escolhaInt < 1 || escolhaInt > 5) {
 
                     LOGGER.warning("\n╔══════════════════════════════════════════════════╗");
-                    LOGGER.warning("║             ❌ Error! Invalid Language          ║");
+                    LOGGER.warning("║              Error! Invalid Language             ║");
                     LOGGER.warning("╠══════════════════════════════════════════════════╣");
                     LOGGER.warning("║ 1 - Try Again                                    ║");
                     LOGGER.warning("║ 2 - Start with Brazilian Portuguese              ║");
@@ -1065,8 +1062,110 @@ public class MenuService {
 
     public static void listarOrientacoes() {
 
-        // orientacaoService.listarOrientacoes();
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.listagem.titulo"), LARGURA_MENU));
 
+        boolean continuar = false;
+
+        while(continuar) {
+
+            // Pedir caso queira listar geral ou por Tipo de Orientação
+
+            LOGGER.info("\n╔══════════════════════════════════════════════════╗");
+            String listarGeral = AuxiliarDeConsole.alinharEsquerda(
+                    mensagem.get("menu.exibir.listar.geral"), LARGURA_MENU);
+            String listarPorTipo = AuxiliarDeConsole.alinharEsquerda(
+                    mensagem.get("menu.exibir.listar.por_tipo"), LARGURA_MENU);
+            LOGGER.info(String.format("║%s║", listarGeral));
+            LOGGER.info(String.format("║%s║", listarPorTipo));
+            LOGGER.info("╚══════════════════════════════════════════════════╝\n");
+
+            AuxiliarDeConsole.escolha();
+
+            String opcao = AuxiliarDeConsole.lerLinha();
+
+            switch (opcao) {
+                case "1":
+                    listarGeral();
+                    break;
+                case "2":
+                    listarPorTipo();
+                    break;
+                case "0":
+                    continuar = false;
+                    break;
+                default:
+                    if (LOGGER.isLoggable(java.util.logging.Level.WARNING)) {
+                        LOGGER.warning(mensagem.get("main.opcao.invalida"));
+                    }
+            }
+
+        }
+
+    }
+
+    private static void listarGeral() {
+
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.listagem.geral.titulo"), LARGURA_MENU));
+
+        List<Orientacao> orientacoes = OrientacaoService.listarOrientacoes();
+
+        if (orientacoes.isEmpty()) {
+            
+            LOGGER.info(mensagem.get("menu.erro.listagem.vazia"));
+
+            erroGenerico();
+        
+        } else {
+
+            for (Orientacao orientacao : orientacoes) {
+                
+                exibirDetalhesOrientacaoPorIdiomaAtual(orientacao);
+
+                AuxiliarDeConsole.separador();
+
+            }
+
+        }
+
+    }
+
+    private static void listarPorTipo() {
+
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.listagem.por_tipo.titulo"), LARGURA_MENU));
+
+        TipoOrientacao tipo = escolhaTipoOrientacao();
+
+        if (tipo == null) {
+
+            LOGGER.warning(mensagem.get("menu.tratar.erro.input.invalido"));
+
+            erroGenerico();
+            return;
+        }
+
+        List<Orientacao> orientacoes = OrientacaoService.listarOrientacoesPorTipo(tipo);
+
+        if (orientacoes.isEmpty()) {
+            
+            LOGGER.info(mensagem.get("main.opcao.invalida"));
+            
+            erroGenerico();
+        
+        } else {
+
+            for (Orientacao orientacao : orientacoes) {
+                
+                exibirDetalhesOrientacaoPorIdiomaAtual(orientacao);
+
+                AuxiliarDeConsole.separador();
+
+            }
+
+        }
+        
     }
 
 }
