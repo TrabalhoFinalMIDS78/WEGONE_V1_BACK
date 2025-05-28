@@ -32,7 +32,7 @@ public class AuxiliarDeConsole {
 
         int largura = 50;
         String borda = repeat('═', largura);
-        String linhaCentral = String.format("║%-50s║", "  " + titulo);
+        String linhaCentral = String.format("║%-50s║", titulo);
 
         if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
             LOGGER.info(String.format("%n╔%s╗", borda));
@@ -53,39 +53,36 @@ public class AuxiliarDeConsole {
     public static void separador() {
 
         if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
-            LOGGER.info(String.format("%n%s", repeat('═', 52)));
+            LOGGER.info(String.format("%n%s", repeat('-', 67)));
         }
 
     }
 
-    public static List<String> quebrarEmLinhas(String texto, int largura) {
-
+    public static List<String> quebrarEmLinhasComPrefixo(String prefixo, String texto, int largura) {
         List<String> linhas = new ArrayList<>();
-        if (texto == null || texto.isEmpty()) {
-            linhas.add("");
-            return linhas;
-        }
-
+        if (texto == null)
+            texto = "";
         String[] palavras = texto.split(" ");
-        StringBuilder linhaAtual = new StringBuilder();
+        StringBuilder linhaAtual = new StringBuilder(prefixo);
+        int larguraPrimeira = largura; // largura total da linha
 
         for (String palavra : palavras) {
-            if (linhaAtual.length() + palavra.length() + 1 > largura) {
-                linhas.add(linhaAtual.toString());
-                linhaAtual = new StringBuilder();
+            // Para a primeira linha, considere o prefixo
+            if (linhaAtual.length() + palavra.length() + 1 > larguraPrimeira) {
+                linhas.add(alinharEsquerda(linhaAtual.toString(), largura));
+                // Para as próximas linhas, use espaços no lugar do prefixo
+                linhaAtual = new StringBuilder(repeat(' ', prefixo.length()));
+                larguraPrimeira = largura; // mantém largura total
             }
-            if (linhaAtual.length() > 0) {
+            if (linhaAtual.toString().trim().length() > 0) {
                 linhaAtual.append(" ");
             }
             linhaAtual.append(palavra);
         }
-
         if (linhaAtual.length() > 0) {
-            linhas.add(linhaAtual.toString());
+            linhas.add(alinharEsquerda(linhaAtual.toString(), largura));
         }
-
         return linhas;
-
     }
 
     /**

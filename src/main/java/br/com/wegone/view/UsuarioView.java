@@ -33,10 +33,10 @@ public class UsuarioView {
             switch (escolha) {
                 case "1":
                     realizarLogin();
-                    break;
+                    return;
                 case "2":
                     realizarCadastro();
-                    break;
+                    return;
                 case "0":
                     sairSistema();
                     return;
@@ -76,9 +76,11 @@ public class UsuarioView {
         String senha = AuxiliarDeConsole.lerLinha();
 
         try {
+
             Usuario usuario = usuarioService.login(matricula, senha);
             AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole.centralizarTexto(
                     String.format(mensagem.get("exception.user.login_success"), usuario.getNome()), LARGURA_MENU));
+
             // Aqui pode chamar o menu principal do sistema, se desejar
         } catch (DadosIncompletosException e) {
 

@@ -180,6 +180,10 @@ public class MenuService {
                             AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole
                                     .centralizarTexto(mensagem.get(MAIN_INICIAR_IDIOMA), LARGURA_MENU));
                             idiomaSelecionadoComSucesso = true;
+
+                            selecionarMenuPrincipal(); // Por questão te tempo, vou precisar fazer este ajuste caso o
+                                                       // usuário busque trocar de idioma.
+
                             break;
                         default:
                             break;
@@ -357,55 +361,54 @@ public class MenuService {
     }
 
     private static TipoOrientacao escolhaTipoOrientacao() {
-
         List<TipoOrientacao> tipos = tipoOrientacoesDisponiveis.getListaOrientacoesDisponiveis();
 
+        // Cabeçalho
         AuxiliarDeConsole.exibirTitulo(
                 AuxiliarDeConsole.centralizarTexto(
-                        mensagem.get("menu.exibir.titulo.tipos_orientacoes") + " ("
-                                + IdiomaSelecionado.getIdiomaAtualNome() + ")",
+                        mensagem.get("menu.exibir.titulo.tipos_orientacoes") + " "
+                                + IdiomaSelecionado.getIdiomaAtualNome(),
                         LARGURA_MENU));
 
+        // Moldura superior
+        LOGGER.info("╔═════════════════════════════════════════════════════════════════╗");
+
+        // Opções
         for (int i = 0; i < tipos.size(); i++) {
             TipoOrientacao tipo = tipos.get(i);
-            String template = "%d - %s %-35s | %s (%s)%n";
-            LOGGER.info(String.format(
-                    template,
+            String linha = String.format(
+                    "%-2d | %-26s | %-8s: %-10s",
                     i + 1,
-                    mensagem.get("menu.exibir.nome.tipos_orientacoes"),
                     tipo.getNome(IdiomaSelecionado.getIdiomaAtualObjeto()),
                     mensagem.get("menu.exibir.codigo.tipos_orientacoes"),
-                    tipo.getCodigo()));
+                    tipo.getCodigo());
+            // Alinha à esquerda e imprime com borda
+            LOGGER.info(String.format("║%-65s║", linha));
         }
 
-        LOGGER.info("\n" + mensagem.get("menu.exibir.selecionar.tipo_orientacao") + ": ");
+        // Moldura inferior
+        LOGGER.info("╚═════════════════════════════════════════════════════════════════╝\n");
+
+        // Prompt de escolha
+        LOGGER.info(mensagem.get("menu.exibir.selecionar.tipo_orientacao") + ": ");
         String input = AuxiliarDeConsole.lerLinha();
         int idx;
 
         try {
-
             idx = Integer.parseInt(input);
-
         } catch (NumberFormatException e) {
-
             LOGGER.warning(mensagem.get("menu.tratar.erro.input.invalido"));
             erroGenerico();
             return null;
-
         }
 
         if (idx < 1 || idx > tipos.size()) {
-
-            LOGGER.warning(mensagem.get("menu.tratar.erro.input.invalido") + "%n");
-
+            LOGGER.warning(mensagem.get("menu.tratar.erro.input.invalido"));
             erroGenerico();
-
             return null;
-
         }
 
         return tipos.get(idx - 1);
-
     }
 
     private static void confirmarOrientacao() {
@@ -459,21 +462,22 @@ public class MenuService {
             String t, c;
 
             while (true) {
-                LOGGER.info(mensagem.get("menu.prompt.titulo") + " " + idioma.getNome() + ": ");
+                LOGGER.info("\n" + mensagem.get("menu.prompt.titulo") + " " + idioma.getNome() + ": ");
                 t = AuxiliarDeConsole.lerLinha();
                 if (t == null || t.isBlank()) {
                     LOGGER.warning(
-                            mensagem.get("exception.orientacao.cadastro.titulo.vazio") + " " + idioma.getNome());
+                            "\n" + mensagem.get("exception.orientacao.cadastro.titulo.vazio") + " " + idioma.getNome());
                     continue;
                 }
                 break;
             }
             while (true) {
-                LOGGER.info(mensagem.get("menu.prompt.conteudo") + " " + idioma.getNome() + ": ");
+                LOGGER.info("\n" + mensagem.get("menu.prompt.conteudo") + " " + idioma.getNome() + ": ");
                 c = AuxiliarDeConsole.lerLinha();
                 if (c == null || c.isBlank()) {
                     LOGGER.warning(
-                            mensagem.get("exception.orientacao.cadastro.conteudo.vazio") + " " + idioma.getNome());
+                            "\n" + mensagem.get("exception.orientacao.cadastro.conteudo.vazio") + " "
+                                    + idioma.getNome());
                     continue;
                 }
                 break;
@@ -487,9 +491,13 @@ public class MenuService {
         try {
 
             OrientacaoService.cadastrarOrientacao(codigo, tipo, titulos, conteudos);
-            LOGGER.info(mensagem.get("exception.orientacao.cadastro.sucesso"));
+
+            AuxiliarDeConsole.exibirTitulo(
+                    AuxiliarDeConsole.centralizarTexto(mensagem.get("exception.orientacao.cadastro.sucesso"),
+                            LARGURA_MENU));
 
         } catch (DadosIncompletosException e) {
+
             LOGGER.warning(e.getMessage());
 
             erroGenerico();
@@ -499,9 +507,17 @@ public class MenuService {
         Orientacao orientacao = buscarPorCodigo(codigo);
 
         if (orientacao != null) {
+
             exibirDetalhesOrientacaoPorCadaIdioma(orientacao); // Mostrar detalhes da orientação cadastrada
+
+            selecionarMenuPrincipal();
+
         } else {
+
             LOGGER.warning(mensagem.get("exception.orientacao.pesquisa.codigo_nao_encontrado") + " " + codigo);
+
+            erroGenerico();
+
         }
 
     }
@@ -623,6 +639,15 @@ public class MenuService {
             erroGenerico();
         }
 
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(
+                        mensagem.get("menu.orientacao.edicao.finalizada"),
+                        LARGURA_MENU));
+
+        exibirDetalhesOrientacaoPorCadaIdioma(orientacao); // Mostrar detalhes da orientação cadastrada
+
+        selecionarMenuPrincipal();
+
     }
 
     // Método para Exluir Orientação
@@ -673,8 +698,6 @@ public class MenuService {
 
         confirmarOrientacao();
 
-        AuxiliarDeConsole.escolha();
-
         String inputConfirmacaoEdicao = AuxiliarDeConsole.lerLinha();
 
         try {
@@ -694,7 +717,7 @@ public class MenuService {
 
             AuxiliarDeConsole.exibirTitulo(
                     AuxiliarDeConsole.centralizarTexto(
-                            mensagem.get("menu.exclusao.confirmada.edicao"),
+                            mensagem.get("menu.exclusao.confirmada"),
                             LARGURA_MENU));
 
             // 4. Chamar service para deletar
@@ -702,7 +725,10 @@ public class MenuService {
 
                 OrientacaoService.deletarOrientacao(codigo);
 
-                LOGGER.info(mensagem.get("exception.orientacao.exclusao.sucesso"));
+                AuxiliarDeConsole.exibirTitulo(
+                        AuxiliarDeConsole.centralizarTexto(
+                                mensagem.get("exception.orientacao.exclusao.sucesso"),
+                                LARGURA_MENU));
 
             } catch (DadosIncompletosException e) {
 
@@ -715,7 +741,7 @@ public class MenuService {
 
             AuxiliarDeConsole.exibirTitulo(
                     AuxiliarDeConsole.centralizarTexto(
-                            mensagem.get("menu.orientacao.nao_confirmada.edicao"),
+                            mensagem.get("menu.exclusao.nao_confirmada"),
                             LARGURA_MENU));
 
             erroGenerico();
@@ -896,7 +922,7 @@ public class MenuService {
                     }
 
                 } else {
-                    LOGGER.warning(mensagem.get("main.input.invalido"));
+                    LOGGER.warning(mensagem.get("main.opcao.invalida"));
                 }
             } catch (NumberFormatException ex) {
 
@@ -923,24 +949,24 @@ public class MenuService {
         // Título
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.titulo") + ": " + titulo, LARGURA_MENU_ORIENTACAO)));
+                        mensagem.get("menu.pesquisa.resultado.titulo") + ": " + titulo, LARGURA_MENU_ORIENTACAO)));
 
         // Tipo
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
+                        mensagem.get("menu.pesquisa.tipo.orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
 
         // Conteúdo (quebra em linhas)
-        List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhas(
-                mensagem.get("menu.pesquisa.conteudo") + ": " + conteudo, LARGURA_MENU_ORIENTACAO);
+        List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
+                mensagem.get("menu.pesquisa.resultado.conteudo") + ": ",
+                conteudo,
+                LARGURA_MENU_ORIENTACAO);
         for (String linha : linhasConteudo) {
-            LOGGER.info(() -> String.format("║%s║", AuxiliarDeConsole.alinharEsquerda(linha, LARGURA_MENU_ORIENTACAO)));
+            LOGGER.info(() -> String.format("║%s║", linha));
         }
 
         // Rodapé
         LOGGER.info("╚═════════════════════════════════════════════════════════════════╝\n");
-
-        AuxiliarDeConsole.separador();
 
     }
 
@@ -957,7 +983,7 @@ public class MenuService {
 
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
+                        mensagem.get("menu.pesquisa.tipo.orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
         LOGGER.info("╠═════════════════════════════════════════════════════════════════╣");
 
         // Para cada idioma, exibe título e conteúdo
@@ -967,22 +993,23 @@ public class MenuService {
 
             // Nome do idioma centralizado
             LOGGER.info(() -> String.format("║%s║",
-                    AuxiliarDeConsole.centralizarTexto("[" + idioma.getNome() + "]", LARGURA_MENU_ORIENTACAO)));
+                    AuxiliarDeConsole.centralizarTexto(idioma.getNome(), LARGURA_MENU_ORIENTACAO)));
             LOGGER.info("╟─────────────────────────────────────────────────────────────────╢");
 
             // Título
             LOGGER.info(() -> String.format("║%s║",
                     AuxiliarDeConsole.alinharEsquerda(
-                            mensagem.get("menu.titulo") + ": " + (titulo != null ? titulo : "[vazio]"),
+                            mensagem.get("menu.pesquisa.resultado.titulo") + ": "
+                                    + (titulo != null ? titulo : "[vazio]"),
                             LARGURA_MENU_ORIENTACAO)));
 
             // Conteúdo (quebra em linhas)
-            List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhas(
-                    mensagem.get("menu.pesquisa.conteudo") + ": " + (conteudo != null ? conteudo : "[vazio]"),
+            List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
+                    mensagem.get("menu.pesquisa.resultado.conteudo") + ": ",
+                    conteudo,
                     LARGURA_MENU_ORIENTACAO);
             for (String linha : linhasConteudo) {
-                LOGGER.info(
-                        () -> String.format("║%s║", AuxiliarDeConsole.alinharEsquerda(linha, LARGURA_MENU_ORIENTACAO)));
+                LOGGER.info(() -> String.format("║%s║", linha));
             }
 
             // Separador entre idiomas (exceto o último)
@@ -991,8 +1018,6 @@ public class MenuService {
 
         // Rodapé
         LOGGER.info("╚═════════════════════════════════════════════════════════════════╝\n");
-
-        AuxiliarDeConsole.separador();
 
     }
 
