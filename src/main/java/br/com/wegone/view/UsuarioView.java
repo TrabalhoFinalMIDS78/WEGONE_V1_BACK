@@ -95,7 +95,7 @@ public class UsuarioView {
             try {
                 escolhaInt = Integer.parseInt(escolha); // Converter escolha para inteiro
             } catch (NumberFormatException nfe) {
-                LOGGER.warning(mensagem.get("main.input.invalido.numero"));
+                LOGGER.warning(mensagem.get("main.opcao.invalida"));
                 continue;
             }
 
