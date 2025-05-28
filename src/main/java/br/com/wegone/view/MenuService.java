@@ -219,7 +219,8 @@ public class MenuService {
             LOGGER.info(() -> "║"
                     + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.listar"), LARGURA_MENU) + "║");
             LOGGER.info(() -> "║"
-                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.trocar.idioma"), LARGURA_MENU) + "║");
+                    + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.trocar.idioma"), LARGURA_MENU)
+                    + "║");
             LOGGER.info(() -> "║"
                     + AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.sair"), LARGURA_MENU) + "║");
             LOGGER.info("╚══════════════════════════════════════════════════╝\n");
