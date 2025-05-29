@@ -8,13 +8,9 @@ package br.com.wegone;
  * 
  */
 
-import java.util.Scanner;
+import br.com.wegone.view.MenuService;
+import br.com.wegone.view.UsuarioView;
 
-import br.com.wegone.service.*;
-import br.com.wegone.view.*;
-import br.com.wegone.core.*;
-import br.com.wegone.exception.DadosIncompletosException;
-import br.com.wegone.model.*;
 
 public class App {
     public static void main(String[] args) {;

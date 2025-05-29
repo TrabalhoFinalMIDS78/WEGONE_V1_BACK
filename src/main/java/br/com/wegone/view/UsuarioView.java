@@ -1,14 +1,11 @@
 package br.com.wegone.view;
 
-import br.com.wegone.view.*;
+import java.util.logging.Logger;
+
 import br.com.wegone.exception.DadosIncompletosException;
 import br.com.wegone.model.Usuario;
 import br.com.wegone.service.IdiomaMensagens;
 import br.com.wegone.service.UsuarioService;
-import br.com.wegone.service.ValidadorService;
-import br.com.wegone.view.AuxiliarDeConsole;
-import java.util.logging.Logger;
-import br.com.wegone.service.ValidadorService;
 
 public class UsuarioView {
 
