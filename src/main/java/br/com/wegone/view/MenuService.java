@@ -23,7 +23,7 @@ public class MenuService {
     private static final IdiomaMensagens mensagem = new IdiomaMensagens();
     private static final String MAIN_INICIAR_IDIOMA = "main.iniciar.idioma";
     private static final int LARGURA_MENU = 50;
-    private static final int LARGURA_MENU_ORIENTACAO = 65;
+    private static final int LARGURA_MENU_MAIOR = 65;
 
     private static OrientacaoService orientacaoService = new OrientacaoService();
     private static IdiomaService idiomaService = new IdiomaService();
@@ -178,8 +178,9 @@ public class MenuService {
                                     .centralizarTexto(mensagem.get(MAIN_INICIAR_IDIOMA), LARGURA_MENU));
                             idiomaSelecionadoComSucesso = true;
 
-                            //selecionarMenuPrincipal(); // Por questão te tempo, vou precisar fazer este ajuste caso o
-                                                       // usuário busque trocar de idioma.
+                            // selecionarMenuPrincipal(); // Por questão te tempo, vou precisar fazer este
+                            // ajuste caso o
+                            // usuário busque trocar de idioma.
 
                             break;
                         default:
@@ -351,7 +352,7 @@ public class MenuService {
     // Métodos adicionais
 
     private static Orientacao buscarPorCodigo(String codigo) {
-        return orientacaoService.getListaOrientacoes().stream()
+        return OrientacaoService.getListaOrientacoes().stream()
                 .filter(o -> o.getCodigo().equalsIgnoreCase(codigo))
                 .findFirst()
                 .orElse(null);
@@ -947,24 +948,28 @@ public class MenuService {
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.centralizarTexto(
                         mensagem.get("menu.pesquisa.resultado.orientacao") + ": " + o.getCodigo(),
-                        LARGURA_MENU_ORIENTACAO)));
+                        LARGURA_MENU_MAIOR)));
         LOGGER.info("╠═════════════════════════════════════════════════════════════════╣");
 
         // Título
-        LOGGER.info(() -> String.format("║%s║",
-                AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.pesquisa.resultado.titulo") + ": " + titulo, LARGURA_MENU_ORIENTACAO)));
+        List<String> linhasTitulo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
+                mensagem.get("menu.pesquisa.resultado.titulo") + ": ",
+                titulo,
+                LARGURA_MENU_MAIOR);
+        for (String linha : linhasTitulo) {
+            LOGGER.info(() -> String.format("║%s║", linha));
+        }
 
         // Tipo
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
+                        mensagem.get("%nmenu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_MAIOR)));
 
         // Conteúdo (quebra em linhas)
         List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
-                mensagem.get("menu.pesquisa.resultado.conteudo") + ": ",
+                mensagem.get("%nmenu.pesquisa.resultado.conteudo") + ": ",
                 conteudo,
-                LARGURA_MENU_ORIENTACAO);
+                LARGURA_MENU_MAIOR);
         for (String linha : linhasConteudo) {
             LOGGER.info(() -> String.format("║%s║", linha));
         }
@@ -982,12 +987,12 @@ public class MenuService {
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.centralizarTexto(
                         mensagem.get("menu.pesquisa.resultado.orientacao") + ": " + o.getCodigo(),
-                        LARGURA_MENU_ORIENTACAO)));
+                        LARGURA_MENU_MAIOR)));
         LOGGER.info("╠═════════════════════════════════════════════════════════════════╣");
 
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
+                        mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_MAIOR)));
         LOGGER.info("╠═════════════════════════════════════════════════════════════════╣");
 
         // Para cada idioma, exibe título e conteúdo
@@ -997,21 +1002,23 @@ public class MenuService {
 
             // Nome do idioma centralizado
             LOGGER.info(() -> String.format("║%s║",
-                    AuxiliarDeConsole.centralizarTexto(idioma.getNome(), LARGURA_MENU_ORIENTACAO)));
+                    AuxiliarDeConsole.centralizarTexto(idioma.getNome(), LARGURA_MENU_MAIOR)));
             LOGGER.info("╟─────────────────────────────────────────────────────────────────╢");
 
             // Título
-            LOGGER.info(() -> String.format("║%s║",
-                    AuxiliarDeConsole.alinharEsquerda(
-                            mensagem.get("menu.pesquisa.resultado.titulo") + ": "
-                                    + (titulo != null ? titulo : "[vazio]"),
-                            LARGURA_MENU_ORIENTACAO)));
+            List<String> linhasTitulo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
+                    mensagem.get("menu.pesquisa.resultado.titulo") + ": ",
+                    titulo,
+                    LARGURA_MENU_MAIOR);
+            for (String linha : linhasTitulo) {
+                LOGGER.info(() -> String.format("║%s║", linha));
+            }
 
             // Conteúdo (quebra em linhas)
             List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
                     mensagem.get("menu.pesquisa.resultado.conteudo") + ": ",
                     conteudo,
-                    LARGURA_MENU_ORIENTACAO);
+                    LARGURA_MENU_MAIOR);
             for (String linha : linhasConteudo) {
                 LOGGER.info(() -> String.format("║%s║", linha));
             }
@@ -1072,9 +1079,9 @@ public class MenuService {
         AuxiliarDeConsole.exibirTitulo(
                 AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.exibir.listagem.titulo"), LARGURA_MENU));
 
-        boolean continuar = false;
+        boolean continuar = true;
 
-        while(continuar) {
+        while (continuar) {
 
             // Pedir caso queira listar geral ou por Tipo de Orientação
 
@@ -1083,8 +1090,11 @@ public class MenuService {
                     mensagem.get("menu.exibir.listar.geral"), LARGURA_MENU);
             String listarPorTipo = AuxiliarDeConsole.alinharEsquerda(
                     mensagem.get("menu.exibir.listar.por_tipo"), LARGURA_MENU);
+            String voltar = AuxiliarDeConsole.alinharEsquerda(
+                    mensagem.get("menu.pesquisa.opcao.voltar"), LARGURA_MENU);
             LOGGER.info(String.format("║%s║", listarGeral));
             LOGGER.info(String.format("║%s║", listarPorTipo));
+            LOGGER.info(String.format("║%s║", voltar));
             LOGGER.info("╚══════════════════════════════════════════════════╝\n");
 
             AuxiliarDeConsole.escolha();
@@ -1099,6 +1109,8 @@ public class MenuService {
                     listarPorTipo();
                     break;
                 case "0":
+                    selecionarMenuPrincipal();
+
                     continuar = false;
                     break;
                 default:
@@ -1119,15 +1131,15 @@ public class MenuService {
         List<Orientacao> orientacoes = OrientacaoService.listarOrientacoes();
 
         if (orientacoes.isEmpty()) {
-            
+
             LOGGER.info(mensagem.get("menu.erro.listagem.vazia"));
 
             erroGenerico();
-        
+
         } else {
 
             for (Orientacao orientacao : orientacoes) {
-                
+
                 exibirDetalhesOrientacaoPorIdiomaAtual(orientacao);
 
                 AuxiliarDeConsole.separador();
@@ -1153,18 +1165,22 @@ public class MenuService {
             return;
         }
 
+        AuxiliarDeConsole.exibirTitulo(
+                AuxiliarDeConsole.centralizarTexto(tipo.getNome(IdiomaSelecionado.getIdiomaAtualObjeto()),
+                        LARGURA_MENU));
+
         List<Orientacao> orientacoes = OrientacaoService.listarOrientacoesPorTipo(tipo);
 
         if (orientacoes.isEmpty()) {
-            
-            LOGGER.info(mensagem.get("main.opcao.invalida"));
-            
+
+            LOGGER.info(mensagem.get("menu.erro.sem_orientacoes.tipo.orientacao"));
+
             erroGenerico();
-        
+
         } else {
 
             for (Orientacao orientacao : orientacoes) {
-                
+
                 exibirDetalhesOrientacaoPorIdiomaAtual(orientacao);
 
                 AuxiliarDeConsole.separador();
@@ -1172,7 +1188,7 @@ public class MenuService {
             }
 
         }
-        
+
     }
 
 }

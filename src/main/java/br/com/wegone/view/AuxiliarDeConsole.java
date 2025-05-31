@@ -14,8 +14,6 @@ public class AuxiliarDeConsole {
     private static final Logger LOGGER = Logger.getLogger(AuxiliarDeConsole.class.getName());
     private static final Scanner SCANNER = new Scanner(System.in, StandardCharsets.UTF_8.name());
 
-   
-
     // Private constructor to prevent instantiation
     AuxiliarDeConsole() {
         throw new UnsupportedOperationException("Utility class"); // Fiz para evitar instância
@@ -35,7 +33,7 @@ public class AuxiliarDeConsole {
 
     public static void exibirTitulo(String titulo) {
 
-        int largura = 50;
+        int largura = 65;
         String borda = repeat('═', largura);
         String linhaCentral = String.format("║%-50s║", titulo);
 
@@ -64,29 +62,50 @@ public class AuxiliarDeConsole {
     }
 
     public static List<String> quebrarEmLinhasComPrefixo(String prefixo, String texto, int largura) {
+
         List<String> linhas = new ArrayList<>();
-        if (texto == null)
+        if (texto == null) {
             texto = "";
+        }
+
+        int larguraPrimeiraLinha = largura - prefixo.length();
         String[] palavras = texto.split(" ");
-        StringBuilder linhaAtual = new StringBuilder(prefixo);
-        int larguraPrimeira = largura; // largura total da linha
+        StringBuilder linhaAtual = new StringBuilder();
+
+        boolean primeiraLinha = true;
 
         for (String palavra : palavras) {
-            // Para a primeira linha, considere o prefixo
-            if (linhaAtual.length() + palavra.length() + 1 > larguraPrimeira) {
-                linhas.add(alinharEsquerda(linhaAtual.toString(), largura));
-                // Para as próximas linhas, use espaços no lugar do prefixo
-                linhaAtual = new StringBuilder(repeat(' ', prefixo.length()));
-                larguraPrimeira = largura; // mantém largura total
+            // Se a palavra for maior que a largura disponível, quebra a palavra
+            while (palavra.length() > (primeiraLinha ? larguraPrimeiraLinha : largura)) {
+                String parte = palavra.substring(0, (primeiraLinha ? larguraPrimeiraLinha : largura));
+                palavra = palavra.substring((primeiraLinha ? larguraPrimeiraLinha : largura));
+
+                String linha = (primeiraLinha ? prefixo : repeat(' ', prefixo.length())) + parte;
+                linhas.add(alinharEsquerda(linha, largura));
+
+                primeiraLinha = false;
             }
-            if (linhaAtual.toString().trim().length() > 0) {
+
+            int larguraDisponivel = (primeiraLinha ? larguraPrimeiraLinha : largura) - linhaAtual.length();
+
+            if (linhaAtual.length() > 0 && palavra.length() + 1 > larguraDisponivel) {
+                String linha = (primeiraLinha ? prefixo : repeat(' ', prefixo.length())) + linhaAtual.toString().trim();
+                linhas.add(alinharEsquerda(linha, largura));
+                linhaAtual = new StringBuilder();
+                primeiraLinha = false;
+            }
+
+            if (linhaAtual.length() > 0) {
                 linhaAtual.append(" ");
             }
             linhaAtual.append(palavra);
         }
+
         if (linhaAtual.length() > 0) {
-            linhas.add(alinharEsquerda(linhaAtual.toString(), largura));
+            String linha = (primeiraLinha ? prefixo : repeat(' ', prefixo.length())) + linhaAtual.toString().trim();
+            linhas.add(alinharEsquerda(linha, largura));
         }
+
         return linhas;
     }
 
