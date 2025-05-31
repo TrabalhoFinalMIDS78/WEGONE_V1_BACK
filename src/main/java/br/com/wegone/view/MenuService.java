@@ -178,7 +178,7 @@ public class MenuService {
                                     .centralizarTexto(mensagem.get(MAIN_INICIAR_IDIOMA), LARGURA_MENU));
                             idiomaSelecionadoComSucesso = true;
 
-                            selecionarMenuPrincipal(); // Por questão te tempo, vou precisar fazer este ajuste caso o
+                            //selecionarMenuPrincipal(); // Por questão te tempo, vou precisar fazer este ajuste caso o
                                                        // usuário busque trocar de idioma.
 
                             break;
@@ -374,7 +374,7 @@ public class MenuService {
         for (int i = 0; i < tipos.size(); i++) {
             TipoOrientacao tipo = tipos.get(i);
             String linha = String.format(
-                    "%-2d | %-26s | %-8s: %-10s",
+                    " %-2d | %-26s | %-8s: %-10s",
                     i + 1,
                     tipo.getNome(IdiomaSelecionado.getIdiomaAtualObjeto()),
                     mensagem.get("menu.exibir.codigo.tipos_orientacoes"),
@@ -765,6 +765,8 @@ public class MenuService {
                         AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.pesquisa.opcao.codigo"), LARGURA_MENU)));
                 LOGGER.info(String.format("║%s║",
                         AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.pesquisa.opcao.titulo"), LARGURA_MENU)));
+                LOGGER.info(String.format("║%s║",
+                        AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.principal.sair"), LARGURA_MENU)));
                 LOGGER.info("╚══════════════════════════════════════════════════╝\n");
             }
 
@@ -782,6 +784,9 @@ public class MenuService {
                     pesquisarPorTitulo();
                     break;
                 case "0":
+
+                    selecionarMenuPrincipal();
+
                     continuar = false;
                     break;
                 default:
@@ -869,7 +874,7 @@ public class MenuService {
             LOGGER.info("\n╔══════════════════════════════════════════════════╗");
             String selecionarMsg = AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.pesquisa.resultado.selecionar"),
                     LARGURA_MENU);
-            String voltarMsg = AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.pesquisa.opcao.voltar"),
+            String voltarMsg = AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.pesquisa.resultado.voltar"),
                     LARGURA_MENU);
             LOGGER.info(String.format("║%s║", selecionarMsg));
             LOGGER.info(String.format("║%s║", voltarMsg));
@@ -878,6 +883,8 @@ public class MenuService {
             String escolha = AuxiliarDeConsole.lerLinha();
 
             if ("0".equals(escolha)) {
+
+                loop = false;
 
                 return;
 
@@ -951,7 +958,7 @@ public class MenuService {
         // Tipo
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.pesquisa.tipo.orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
+                        mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
 
         // Conteúdo (quebra em linhas)
         List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
@@ -980,7 +987,7 @@ public class MenuService {
 
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
-                        mensagem.get("menu.pesquisa.tipo.orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
+                        mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_ORIENTACAO)));
         LOGGER.info("╠═════════════════════════════════════════════════════════════════╣");
 
         // Para cada idioma, exibe título e conteúdo

@@ -82,20 +82,14 @@ public class UsuarioView {
         } catch (DadosIncompletosException e) {
 
             LOGGER.warning(e.getMessage());
-            if (erroAcesso() == 0) {
-
-                sairSistema();
-
-            }
+            
+            erroAcesso();
 
         } catch (RuntimeException e) {
 
             LOGGER.severe(e.getMessage());
-            if (erroAcesso() == 0) {
-
-                sairSistema();
-
-            }
+            
+            erroAcesso();
 
         }
     }
@@ -154,13 +148,20 @@ public class UsuarioView {
         LOGGER.info(mensagem.get("menu.escolha"));
         String escolha = AuxiliarDeConsole.lerLinha();
         switch (escolha) {
+
             case "1":
-                return 1;
+                
+                selecionarMenuAcesso();
+
             case "0":
-                return 0;
+                
+                sairSistema();
+            
             default:
+
                 LOGGER.warning(mensagem.get("main.opcao.invalida"));
                 return erroAcesso();
+                
         }
     }
 }
