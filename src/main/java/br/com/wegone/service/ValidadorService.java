@@ -12,11 +12,11 @@ public class ValidadorService {
         throw new UnsupportedOperationException("Utility class");
     }
 
-    private static final IdiomaMensagens mensagem = new IdiomaMensagens();
-
     // Excessões para o Service das Orientações
 
     public static void validarInputVazio(String texto) {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
 
         if (texto == null || texto.isBlank()) {
 
@@ -27,6 +27,8 @@ public class ValidadorService {
     }
 
     public static void validarExistenciaOrientacao(Orientacao orientacao) {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
 
         if (orientacao == null) {
 
@@ -39,6 +41,8 @@ public class ValidadorService {
     // Validações para o código de cadastro
     public static void validarCodigoCadastro(String codigo, List<Orientacao> listaOrientacoes)
             throws DadosIncompletosException {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
 
         validarInputVazio(codigo);
 
@@ -62,6 +66,8 @@ public class ValidadorService {
 
     public static void validarLogin(String matricula, String senha) {
 
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         validarMatricula(matricula);
         validarSenha(senha);
 
@@ -76,6 +82,8 @@ public class ValidadorService {
 
     public static void validarMatricula(String matricula) {
 
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         validarInputVazio(matricula);
 
         if (matricula.length() != 5) {
@@ -89,6 +97,8 @@ public class ValidadorService {
 
     public static void validarNome(String nome) {
 
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         validarInputVazio(nome);
         if (nome.length() < 3) {
             throw new DadosIncompletosException(mensagem.get("exception.user.nome.tamanho"));
@@ -101,6 +111,8 @@ public class ValidadorService {
 
     public static void validarEmail(String email) {
 
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         validarInputVazio(email);
 
         if (!email.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
@@ -110,6 +122,8 @@ public class ValidadorService {
     }
 
     public static void validarSenha(String senha) {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
 
         validarInputVazio(senha);
 

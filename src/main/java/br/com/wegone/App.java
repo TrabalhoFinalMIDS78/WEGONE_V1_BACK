@@ -1,5 +1,7 @@
 package br.com.wegone;
 
+import br.com.wegone.core.IdiomaSelecionado;
+
 /* Main do Projeto
  * 
  * Projeto WEGONE versão 1.0
@@ -11,14 +13,15 @@ package br.com.wegone;
 import br.com.wegone.view.MenuService;
 import br.com.wegone.view.UsuarioView;
 
-
 public class App {
-    public static void main(String[] args) {;
+    public static void main(String[] args) {
+        ;
 
         // Iniciar Sistema
 
         MenuService.exibirLogo();
 
+        // Definir Idioma
         MenuService.selecionarIdioma();
 
         // Definir Usuário

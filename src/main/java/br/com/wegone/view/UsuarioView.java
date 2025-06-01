@@ -10,11 +10,14 @@ import br.com.wegone.service.UsuarioService;
 public class UsuarioView {
 
     private static final Logger LOGGER = Logger.getLogger(UsuarioView.class.getName());
-    private static final IdiomaMensagens mensagem = new IdiomaMensagens();
+    private IdiomaMensagens mensagem = new IdiomaMensagens();
     private static final UsuarioService usuarioService = new UsuarioService();
     private static final int LARGURA_MENU = 50;
+    private static final int LARGURA_MENU_MAIOR = 65;
 
     public static void sairSistema() {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
 
         AuxiliarDeConsole.exibirTitulo(mensagem.get("main.sair.titulo"));
         LOGGER.info("\n" + mensagem.get("main.sair.sistema"));
@@ -23,6 +26,9 @@ public class UsuarioView {
     }
 
     public static void selecionarMenuAcesso() {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         while (true) {
             exibirMenuAcesso();
             String escolha = AuxiliarDeConsole.lerLinha();
@@ -45,6 +51,9 @@ public class UsuarioView {
     }
 
     private static void exibirMenuAcesso() {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         LOGGER.info("\n╔══════════════════════════════════════════════════╗");
         LOGGER.info(String.format("║%s║",
                 AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.titulo"), LARGURA_MENU)));
@@ -63,8 +72,10 @@ public class UsuarioView {
 
     private static void realizarLogin() {
 
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         AuxiliarDeConsole.exibirTitulo(
-                AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.login.titulo"), LARGURA_MENU));
+                AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.login.titulo"), LARGURA_MENU_MAIOR));
 
         LOGGER.info("\n" + mensagem.get("menu.acesso.login.matricula"));
         String matricula = AuxiliarDeConsole.lerLinha();
@@ -76,27 +87,31 @@ public class UsuarioView {
 
             Usuario usuario = usuarioService.login(matricula, senha);
             AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole.centralizarTexto(
-                    String.format(mensagem.get("exception.user.login_success"), usuario.getNome()), LARGURA_MENU));
+                    String.format(mensagem.get("exception.user.login_success"), usuario.getNome()),
+                    LARGURA_MENU_MAIOR));
 
             // Aqui pode chamar o menu principal do sistema, se desejar
         } catch (DadosIncompletosException e) {
 
             LOGGER.warning(e.getMessage());
-            
+
             erroAcesso();
 
         } catch (RuntimeException e) {
 
             LOGGER.severe(e.getMessage());
-            
+
             erroAcesso();
 
         }
     }
 
     private static void realizarCadastro() {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         AuxiliarDeConsole.exibirTitulo(
-                AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.cadastro.titulo"), LARGURA_MENU));
+                AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.cadastro.titulo"), LARGURA_MENU_MAIOR));
         LOGGER.info(mensagem.get("menu.acesso.cadastro.matricula"));
         String mat = AuxiliarDeConsole.lerLinha();
         LOGGER.info(mensagem.get("menu.acesso.cadastro.nome"));
@@ -111,7 +126,7 @@ public class UsuarioView {
             Usuario novoUsuario = usuarioService.cadastrar(mat, nome, email, senhaCadastro);
             AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole.centralizarTexto(
                     String.format(mensagem.get("exception.user.register_success"), novoUsuario.getNome()),
-                    LARGURA_MENU));
+                    LARGURA_MENU_MAIOR));
 
         } catch (DadosIncompletosException e) {
 
@@ -135,6 +150,9 @@ public class UsuarioView {
     }
 
     private static int erroAcesso() {
+
+        IdiomaMensagens mensagem = new IdiomaMensagens();
+
         LOGGER.info("\n╔══════════════════════════════════════════════════╗");
         LOGGER.info(
                 "║" + AuxiliarDeConsole.centralizarTexto(mensagem.get("menu.acesso.erro.titulo"), LARGURA_MENU) + "║");
@@ -150,18 +168,18 @@ public class UsuarioView {
         switch (escolha) {
 
             case "1":
-                
+
                 selecionarMenuAcesso();
 
             case "0":
-                
+
                 sairSistema();
-            
+
             default:
 
                 LOGGER.warning(mensagem.get("main.opcao.invalida"));
                 return erroAcesso();
-                
+
         }
     }
 }
