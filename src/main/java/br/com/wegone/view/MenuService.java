@@ -471,9 +471,23 @@ public class MenuService {
         for (Idioma idioma : idiomaService.getListaIdiomas()) {
             String t, c;
 
+            // Moldura para o idioma
+            String idiomaNome = AuxiliarDeConsole.centralizarTexto(idioma.getNome(), LARGURA_MENU_MAIOR);
+
+            AuxiliarDeConsole.exibirTitulo(idiomaNome);
+
+            // Cadastro do título
             while (true) {
-                LOGGER.info("\n" + mensagem.get("menu.prompt.titulo") + " " + idioma.getNome() + ": ");
+
+                LOGGER.info(AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.prompt.titulo") + ": ",
+                        LARGURA_MENU_MAIOR));
+
+                LOGGER.info("");
+
                 t = AuxiliarDeConsole.lerLinha();
+
+                LOGGER.info("");
+
                 if (t == null || t.isBlank()) {
                     LOGGER.warning(
                             "\n" + mensagem.get("exception.orientacao.cadastro.titulo.vazio") + " " + idioma.getNome());
@@ -481,9 +495,17 @@ public class MenuService {
                 }
                 break;
             }
+
+            // Cadastro do conteúdo
             while (true) {
-                LOGGER.info("\n" + mensagem.get("menu.prompt.conteudo") + " " + idioma.getNome() + ": ");
+
+                LOGGER.info(AuxiliarDeConsole.alinharEsquerda(mensagem.get("menu.prompt.conteudo") + ": ",
+                        LARGURA_MENU_MAIOR));
+
+                LOGGER.info("");
+
                 c = AuxiliarDeConsole.lerLinha();
+
                 if (c == null || c.isBlank()) {
                     LOGGER.warning(
                             "\n" + mensagem.get("exception.orientacao.cadastro.conteudo.vazio") + " "
@@ -495,7 +517,6 @@ public class MenuService {
 
             titulos.put(idioma, t);
             conteudos.put(idioma, c);
-
         }
 
         try {
@@ -825,7 +846,7 @@ public class MenuService {
 
         IdiomaMensagens mensagem = new IdiomaMensagens();
 
-        LOGGER.log(java.util.logging.Level.INFO, "{0} ", mensagem.get("menu.pesquisa.prompt.codigo"));
+        LOGGER.info(mensagem.get("menu.pesquisa.prompt.codigo"));
 
         String codigo = AuxiliarDeConsole.lerLinha();
 
@@ -852,7 +873,7 @@ public class MenuService {
 
         IdiomaMensagens mensagem = new IdiomaMensagens();
 
-        LOGGER.log(java.util.logging.Level.INFO, "{0} ", mensagem.get("menu.pesquisa.prompt.titulo"));
+        LOGGER.info(mensagem.get("menu.pesquisa.prompt.titulo"));
         String termo = AuxiliarDeConsole.lerLinha();
 
         try {
@@ -911,8 +932,6 @@ public class MenuService {
 
             if ("0".equals(escolha)) {
 
-                loop = false;
-
                 return;
 
             }
@@ -948,7 +967,7 @@ public class MenuService {
 
                     if ("0".equals(prox)) {
 
-                        loop = false;
+                        return;
 
                     }
 
@@ -990,21 +1009,22 @@ public class MenuService {
 
         // Tipo
 
-        AuxiliarDeConsole.pularLinha(LARGURA_MENU);
-
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
                         mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_MAIOR)));
 
-        AuxiliarDeConsole.pularLinha(LARGURA_MENU);
-
         // Conteúdo (quebra em linhas)
-        List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
-                mensagem.get("menu.pesquisa.resultado.conteudo") + ": ",
-                conteudo,
-                LARGURA_MENU_MAIOR);
-        for (String linha : linhasConteudo) {
-            LOGGER.info(() -> String.format("║%s║", linha));
+        String[] linhasConteudoBrutas = conteudo.split("\\n");
+        boolean primeira = true;
+        for (String linhaBruta : linhasConteudoBrutas) {
+            List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
+                    primeira ? mensagem.get("menu.pesquisa.resultado.conteudo") + ": " : "          ",
+                    linhaBruta,
+                    LARGURA_MENU_MAIOR);
+            for (String linha : linhasConteudo) {
+                LOGGER.info(() -> String.format("║%s║", linha));
+            }
+            primeira = false;
         }
 
         // Rodapé
@@ -1051,14 +1071,17 @@ public class MenuService {
 
             // Conteúdo (quebra em linhas)
 
-            AuxiliarDeConsole.pularLinha(LARGURA_MENU);
-
-            List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
-                    mensagem.get("menu.pesquisa.resultado.conteudo") + ": ",
-                    conteudo,
-                    LARGURA_MENU_MAIOR);
-            for (String linha : linhasConteudo) {
-                LOGGER.info(() -> String.format("║%s║", linha));
+            String[] linhasConteudoBrutas = conteudo.split("\\n");
+            boolean primeira = true;
+            for (String linhaBruta : linhasConteudoBrutas) {
+                List<String> linhasConteudo = AuxiliarDeConsole.quebrarEmLinhasComPrefixo(
+                        primeira ? mensagem.get("menu.pesquisa.resultado.conteudo") + ": " : "          ",
+                        linhaBruta,
+                        LARGURA_MENU_MAIOR);
+                for (String linha : linhasConteudo) {
+                    LOGGER.info(() -> String.format("║%s║", linha));
+                }
+                primeira = false;
             }
 
             // Separador entre idiomas (exceto o último)

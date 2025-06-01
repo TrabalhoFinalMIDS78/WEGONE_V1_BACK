@@ -90,7 +90,8 @@ public class UsuarioView {
                     String.format(mensagem.get("exception.user.login_success"), usuario.getNome()),
                     LARGURA_MENU_MAIOR));
 
-            // Aqui pode chamar o menu principal do sistema, se desejar
+            MenuService.selecionarMenuPrincipal();
+
         } catch (DadosIncompletosException e) {
 
             LOGGER.warning(e.getMessage());
@@ -127,6 +128,8 @@ public class UsuarioView {
             AuxiliarDeConsole.exibirTitulo(AuxiliarDeConsole.centralizarTexto(
                     String.format(mensagem.get("exception.user.register_success"), novoUsuario.getNome()),
                     LARGURA_MENU_MAIOR));
+
+            MenuService.selecionarMenuPrincipal();
 
         } catch (DadosIncompletosException e) {
 

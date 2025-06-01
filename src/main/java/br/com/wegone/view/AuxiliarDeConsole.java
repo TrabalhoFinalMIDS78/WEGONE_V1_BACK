@@ -61,16 +61,6 @@ public class AuxiliarDeConsole {
 
     }
 
-    public static void pularLinha(int largura) {
-
-        largura -= 2;
-
-        String espacoEmBranco = repeat(' ', largura);
-
-        LOGGER.info(String.format("║%s║", espacoEmBranco));
-
-    }
-
     public static List<String> quebrarEmLinhasComPrefixo(String prefixo, String texto, int largura) {
 
         List<String> linhas = new ArrayList<>();
