@@ -629,12 +629,23 @@ public class MenuService {
 
             for (Idioma idioma : idiomaService.getListaIdiomas()) {
                 String atualT = orientacao.getTitulo(idioma);
-                LOGGER.info("\n" + idioma.getNome() + ":");
+
+                LOGGER.info("");
+
+                AuxiliarDeConsole.exibirTitulo(
+                        AuxiliarDeConsole.centralizarTexto(
+                                idioma.getNome(),
+                                LARGURA_MENU_MAIOR));
+
                 LOGGER.info(mensagem.get("menu.editar.titulo.atual") + ": " + (atualT != null ? atualT : "[vazio]"));
+
                 LOGGER.info(mensagem.get("menu.editar.titulo.novo") + mensagem.get("menu.exibir.enter_manter") + ": ");
+
                 String t = AuxiliarDeConsole.lerLinha();
                 if (t != null && !t.isBlank())
                     novosTitulos.put(idioma, t);
+
+                LOGGER.info("");
 
                 String atualC = orientacao.getConteudo(idioma);
                 LOGGER.info(mensagem.get("menu.editar.conteudo.atual") + ": " + (atualC != null ? atualC : "[vazio]"));
@@ -1007,11 +1018,15 @@ public class MenuService {
             LOGGER.info(() -> String.format("║%s║", linha));
         }
 
+        AuxiliarDeConsole.pularLinha(LARGURA_MENU_MAIOR);
+
         // Tipo
 
         LOGGER.info(() -> String.format("║%s║",
                 AuxiliarDeConsole.alinharEsquerda(
                         mensagem.get("menu.pesquisa.tipo_orientacao") + ": " + tipo, LARGURA_MENU_MAIOR)));
+
+        AuxiliarDeConsole.pularLinha(LARGURA_MENU_MAIOR);
 
         // Conteúdo (quebra em linhas)
         String[] linhasConteudoBrutas = conteudo.split("\\n");
@@ -1068,6 +1083,8 @@ public class MenuService {
             for (String linha : linhasTitulo) {
                 LOGGER.info(() -> String.format("║%s║", linha));
             }
+
+            AuxiliarDeConsole.pularLinha(LARGURA_MENU_MAIOR);
 
             // Conteúdo (quebra em linhas)
 
