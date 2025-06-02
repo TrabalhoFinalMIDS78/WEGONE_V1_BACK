@@ -148,4 +148,16 @@ public class AuxiliarDeConsole {
         return texto + repeat(' ', Math.max(0, largura - texto.length()));
     }
 
+    public static void pularLinha(int largura) {
+
+        String espacoEmBranco = repeat(' ', largura);
+
+        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
+
+            LOGGER.info(String.format("║%s║", espacoEmBranco));
+
+        }
+
+    }
+
 }
