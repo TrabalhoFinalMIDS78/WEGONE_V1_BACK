@@ -30,7 +30,7 @@ O WegOne é um sistema de gerenciamento de orientações operacionais, projetado
 │ │ ├── 📁 java
 │ │ │ └── 📁 br/com/wegone
 │ │ │ ├── 📁 core
-│ │ │ │ ├── IdiomasAeConsdo.java
+│ │ │ │ ├── IdiomaSelecionado.java
 │ │ │ │ └── 📁 exception
 │ │ │ │ └── DadosIncompletosException.java
 │ │ │ ├── 📁 model
