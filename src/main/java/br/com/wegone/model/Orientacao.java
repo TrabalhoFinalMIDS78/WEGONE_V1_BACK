@@ -1,5 +1,6 @@
 package br.com.wegone.model;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,20 +10,26 @@ public class Orientacao {
     private TipoOrientacao tipo;
     private Map<Idioma, String> titulos = new HashMap<>();
     private Map<Idioma, String> conteudos = new HashMap<>();
+    private LocalDateTime dataCriacao;
 
     public Orientacao(String codigo, TipoOrientacao tipo) {
 
         this.codigo = codigo;
         this.tipo = tipo;
+        this.dataCriacao = LocalDateTime.now();
 
     }
 
     public void adicionarTitulo(Idioma idioma, String titulo) {
+
         titulos.put(idioma, titulo);
+
     }
 
     public void adicionarConteudo(Idioma idioma, String conteudo) {
+
         conteudos.put(idioma, conteudo);
+
     }
 
     public String getTitulo(Idioma idioma) {
@@ -30,7 +37,7 @@ public class Orientacao {
     }
 
     public String getConteudo(Idioma idioma) {
-        return conteudos.getOrDefault(idioma, "[no]");
+        return conteudos.getOrDefault(idioma, "[no content]");
     }
 
     public TipoOrientacao getTipo() {
@@ -39,6 +46,10 @@ public class Orientacao {
 
     public String getCodigo() {
         return codigo;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
     }
 
 }
